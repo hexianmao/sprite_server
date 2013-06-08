@@ -1,5 +1,0 @@
-first git test
-
-hello hexm!
-
-1
