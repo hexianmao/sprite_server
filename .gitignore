@@ -1,8 +1,8 @@
 *.class
-sprite_client/.*
-sprite_server/.*
-sprite_server/target
-
+.settings
+.classpath
+.project
+target
 
 # Package Files #
 *.jar
