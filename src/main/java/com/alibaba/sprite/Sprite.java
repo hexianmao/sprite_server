@@ -121,7 +121,7 @@ public final class Sprite {
     }
 
     private void startup() throws IOException {
-        // before start        
+        // before start
         String home = System.getProperty("sprite.home");
         if (home == null) {
             SimpleDateFormat sdf = new SimpleDateFormat(DATA_FORMAT);
