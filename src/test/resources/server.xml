@@ -24,7 +24,7 @@
     <property name="processors">3</property>
     <property name="taskExecutor">3</property>
     <property name="managerExecutor">3</property>
-    <property name="serverExecutor">3</property>
+    <property name="serverExecutor">10</property>
   </system>
 
   <!-- 用户访问定义，用户名、密码、schema等信息。 -->

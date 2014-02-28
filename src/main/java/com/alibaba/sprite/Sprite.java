@@ -18,7 +18,6 @@ package com.alibaba.sprite;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
@@ -31,7 +30,6 @@ import com.alibaba.sprite.net.NIOAcceptor;
 import com.alibaba.sprite.net.NIOConnector;
 import com.alibaba.sprite.net.NIOProcessor;
 import com.alibaba.sprite.server.ServerConnectionFactory;
-import com.alibaba.sprite.server.session.MySQLDataNode;
 import com.alibaba.sprite.statistic.SQLRecorder;
 import com.alibaba.sprite.util.ExecutorUtil;
 import com.alibaba.sprite.util.NameableExecutor;
@@ -149,13 +147,6 @@ public final class Sprite {
         connector.setProcessors(processors);
         connector.start();
 
-        // startup init dataNodes
-        Map<String, MySQLDataNode> dataNodes = config.getDataNodes();
-        LOGGER.info("Startup Initialize DataNodes ...");
-        for (MySQLDataNode node : dataNodes.values()) {
-            node.init(1, 0);
-        }
-
         // startup manager
         ManagerConnectionFactory mf = new ManagerConnectionFactory();
         mf.setCharset(system.getCharset());
@@ -167,7 +158,6 @@ public final class Sprite {
 
         // startup server
         ServerConnectionFactory sf = new ServerConnectionFactory();
-        sf.setCharset(system.getCharset());
         sf.setIdleTimeout(system.getIdleTimeout());
         server = new NIOAcceptor("Server", system.getServerPort(), sf);
         server.setProcessors(processors);

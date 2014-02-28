@@ -18,13 +18,10 @@ package com.alibaba.sprite.manager;
 import org.apache.log4j.Logger;
 
 import com.alibaba.sprite.config.ErrorCode;
-import com.alibaba.sprite.manager.handler.ClearHandler;
 import com.alibaba.sprite.manager.handler.ReloadHandler;
 import com.alibaba.sprite.manager.handler.RollbackHandler;
 import com.alibaba.sprite.manager.handler.SelectHandler;
 import com.alibaba.sprite.manager.handler.ShowHandler;
-import com.alibaba.sprite.manager.handler.StopHandler;
-import com.alibaba.sprite.manager.handler.SwitchHandler;
 import com.alibaba.sprite.manager.parser.ManagerParse;
 import com.alibaba.sprite.manager.response.KillConnection;
 import com.alibaba.sprite.manager.response.Offline;
@@ -61,9 +58,6 @@ public class ManagerQueryHandler implements QueryHandler {
         case ManagerParse.SHOW:
             ShowHandler.handle(sql, c, rs >>> 8);
             break;
-        case ManagerParse.SWITCH:
-            SwitchHandler.handler(sql, c, rs >>> 8);
-            break;
         case ManagerParse.KILL_CONN:
             KillConnection.response(sql, rs >>> 8, c);
             break;
@@ -73,17 +67,11 @@ public class ManagerQueryHandler implements QueryHandler {
         case ManagerParse.ONLINE:
             Online.execute(sql, c);
             break;
-        case ManagerParse.STOP:
-            StopHandler.handle(sql, c, rs >>> 8);
-            break;
         case ManagerParse.RELOAD:
             ReloadHandler.handle(sql, c, rs >>> 8);
             break;
         case ManagerParse.ROLLBACK:
             RollbackHandler.handle(sql, c, rs >>> 8);
-            break;
-        case ManagerParse.CLEAR:
-            ClearHandler.handle(sql, c, rs >>> 8);
             break;
         default:
             c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");

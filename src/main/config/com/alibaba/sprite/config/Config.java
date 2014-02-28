@@ -25,7 +25,6 @@ import com.alibaba.sprite.config.model.QuarantineConfig;
 import com.alibaba.sprite.config.model.SchemaConfig;
 import com.alibaba.sprite.config.model.SystemConfig;
 import com.alibaba.sprite.config.model.UserConfig;
-import com.alibaba.sprite.server.session.MySQLDataNode;
 import com.alibaba.sprite.util.TimeUtil;
 
 /**
@@ -44,8 +43,6 @@ public class Config {
     private volatile Map<String, UserConfig> _users;
     private volatile Map<String, SchemaConfig> schemas;
     private volatile Map<String, SchemaConfig> _schemas;
-    private volatile Map<String, MySQLDataNode> dataNodes;
-    private volatile Map<String, MySQLDataNode> _dataNodes;
     private volatile Map<String, DataSourceConfig> dataSources;
     private volatile Map<String, DataSourceConfig> _dataSources;
     private long reloadTime;
@@ -59,7 +56,6 @@ public class Config {
         this.users = confInit.getUsers();
         this.schemas = confInit.getSchemas();
         this.dataSources = confInit.getDataSources();
-        this.dataNodes = confInit.getDataNodes();
         this.quarantine = confInit.getQuarantine();
         this.cluster = confInit.getCluster();
 
@@ -87,14 +83,6 @@ public class Config {
 
     public Map<String, SchemaConfig> getBackupSchemas() {
         return _schemas;
-    }
-
-    public Map<String, MySQLDataNode> getDataNodes() {
-        return dataNodes;
-    }
-
-    public Map<String, MySQLDataNode> getBackupDataNodes() {
-        return _dataNodes;
     }
 
     public Map<String, DataSourceConfig> getDataSources() {
@@ -134,16 +122,15 @@ public class Config {
     }
 
     public void reload(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-                       Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-                       Cluster cluster, QuarantineConfig quarantine) {
-        apply(users, schemas, dataNodes, dataSources, cluster, quarantine);
+                       Map<String, DataSourceConfig> dataSources, Cluster cluster, QuarantineConfig quarantine) {
+        apply(users, schemas, dataSources, cluster, quarantine);
         this.reloadTime = TimeUtil.currentTimeMillis();
         this.status = RELOAD;
     }
 
     public boolean canRollback() {
-        if (_users == null || _schemas == null || _dataNodes == null || _dataSources == null || _cluster == null
-                || _quarantine == null || status == ROLLBACK) {
+        if (_users == null || _schemas == null || _dataSources == null || _cluster == null || _quarantine == null
+                || status == ROLLBACK) {
             return false;
         } else {
             return true;
@@ -151,16 +138,14 @@ public class Config {
     }
 
     public void rollback(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-                         Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-                         Cluster cluster, QuarantineConfig quarantine) {
-        apply(users, schemas, dataNodes, dataSources, cluster, quarantine);
+                         Map<String, DataSourceConfig> dataSources, Cluster cluster, QuarantineConfig quarantine) {
+        apply(users, schemas, dataSources, cluster, quarantine);
         this.rollbackTime = TimeUtil.currentTimeMillis();
         this.status = ROLLBACK;
     }
 
     private void apply(Map<String, UserConfig> users, Map<String, SchemaConfig> schemas,
-                       Map<String, MySQLDataNode> dataNodes, Map<String, DataSourceConfig> dataSources,
-                       Cluster cluster, QuarantineConfig quarantine) {
+                       Map<String, DataSourceConfig> dataSources, Cluster cluster, QuarantineConfig quarantine) {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
@@ -176,7 +161,6 @@ public class Config {
             }
             this._users = this.users;
             this._schemas = this.schemas;
-            this._dataNodes = this.dataNodes;
             this._dataSources = this.dataSources;
             this._cluster = this.cluster;
             this._quarantine = this.quarantine;
@@ -192,7 +176,6 @@ public class Config {
             }
             this.users = users;
             this.schemas = schemas;
-            this.dataNodes = dataNodes;
             this.dataSources = dataSources;
             this.cluster = cluster;
             this.quarantine = quarantine;

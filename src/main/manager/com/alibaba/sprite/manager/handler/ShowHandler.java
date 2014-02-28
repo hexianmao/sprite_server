@@ -23,9 +23,6 @@ import com.alibaba.sprite.manager.response.ShowCollation;
 import com.alibaba.sprite.manager.response.ShowCommand;
 import com.alibaba.sprite.manager.response.ShowConnection;
 import com.alibaba.sprite.manager.response.ShowConnectionSQL;
-import com.alibaba.sprite.manager.response.ShowDataNode;
-import com.alibaba.sprite.manager.response.ShowDataSource;
-import com.alibaba.sprite.manager.response.ShowDatabase;
 import com.alibaba.sprite.manager.response.ShowHeartbeat;
 import com.alibaba.sprite.manager.response.ShowHelp;
 import com.alibaba.sprite.manager.response.ShowParser;
@@ -36,13 +33,11 @@ import com.alibaba.sprite.manager.response.ShowSQLDetail;
 import com.alibaba.sprite.manager.response.ShowSQLExecute;
 import com.alibaba.sprite.manager.response.ShowSQLSlow;
 import com.alibaba.sprite.manager.response.ShowServer;
-import com.alibaba.sprite.manager.response.ShowSlow;
 import com.alibaba.sprite.manager.response.ShowThreadPool;
 import com.alibaba.sprite.manager.response.ShowTime;
 import com.alibaba.sprite.manager.response.ShowVariables;
 import com.alibaba.sprite.manager.response.ShowVersion;
 import com.alibaba.sprite.parser.util.ParseUtil;
-import com.alibaba.sprite.util.StringUtil;
 
 /**
  * @author xianmao.hexm
@@ -67,33 +62,6 @@ public final class ShowHandler {
         case ManagerParseShow.CONNECTION_SQL:
             ShowConnectionSQL.execute(c);
             break;
-        case ManagerParseShow.DATABASE:
-            ShowDatabase.execute(c);
-            break;
-        case ManagerParseShow.DATANODE:
-            ShowDataNode.execute(c, null);
-            break;
-        case ManagerParseShow.DATANODE_WHERE: {
-            String name = stmt.substring(rs >>> 8).trim();
-            if (StringUtil.isEmpty(name)) {
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-            } else {
-                ShowDataNode.execute(c, name);
-            }
-            break;
-        }
-        case ManagerParseShow.DATASOURCE:
-            ShowDataSource.execute(c, null);
-            break;
-        case ManagerParseShow.DATASOURCE_WHERE: {
-            String name = stmt.substring(rs >>> 8).trim();
-            if (StringUtil.isEmpty(name)) {
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-            } else {
-                ShowDataSource.execute(c, name);
-            }
-            break;
-        }
         case ManagerParseShow.HELP:
             ShowHelp.execute(c);
             break;
@@ -124,24 +92,7 @@ public final class ShowHandler {
         case ManagerParseShow.SQL_SLOW:
             ShowSQLSlow.execute(c);
             break;
-        case ManagerParseShow.SLOW_DATANODE: {
-            String name = stmt.substring(rs >>> 8).trim();
-            if (StringUtil.isEmpty(name)) {
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-            } else {
-                ShowSlow.dataNode(c, name);
-            }
-            break;
-        }
-        case ManagerParseShow.SLOW_SCHEMA: {
-            String name = stmt.substring(rs >>> 8).trim();
-            if (StringUtil.isEmpty(name)) {
-                c.writeErrMessage(ErrorCode.ER_YES, "Unsupported statement");
-            } else {
-                ShowSlow.schema(c, name);
-            }
-            break;
-        }
+
         case ManagerParseShow.THREADPOOL:
             ShowThreadPool.execute(c);
             break;

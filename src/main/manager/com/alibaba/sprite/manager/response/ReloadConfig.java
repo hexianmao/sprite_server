@@ -31,8 +31,6 @@ import com.alibaba.sprite.config.model.SchemaConfig;
 import com.alibaba.sprite.config.model.UserConfig;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.net.packet.OkPacket;
-import com.alibaba.sprite.server.session.MySQLDataNode;
-import com.alibaba.sprite.server.session.MySQLDataSource;
 
 /**
  * @author xianmao.hexm
@@ -67,7 +65,6 @@ public final class ReloadConfig {
         ConfigInitializer loader = new ConfigInitializer();
         Map<String, UserConfig> users = loader.getUsers();
         Map<String, SchemaConfig> schemas = loader.getSchemas();
-        Map<String, MySQLDataNode> dataNodes = loader.getDataNodes();
         Map<String, DataSourceConfig> dataSources = loader.getDataSources();
         Cluster cluster = loader.getCluster();
         QuarantineConfig quarantine = loader.getQuarantine();
@@ -75,43 +72,8 @@ public final class ReloadConfig {
         // 应用新配置
         Config conf = Sprite.getInstance().getConfig();
 
-        // 如果重载已经存在的数据节点，初始化连接数参考空闲连接数，否则为1。
-        boolean reloadStatus = true;
-        Map<String, MySQLDataNode> cNodes = conf.getDataNodes();
-        for (MySQLDataNode dn : dataNodes.values()) {
-            MySQLDataNode cdn = cNodes.get(dn.getName());
-            if (cdn != null && cdn.getSource() != null) {
-                int size = Math.min(cdn.getSource().getIdleCount(), dn.getConfig().getPoolSize());
-                dn.init(size > 0 ? size : 1, 0);
-            } else {
-                dn.init(1, 0);
-            }
-            if (!dn.isInitSuccess()) {
-                reloadStatus = false;
-                break;
-            }
-        }
-        // 如果重载不成功，则清理已初始化的资源。
-        if (!reloadStatus) {
-            for (MySQLDataNode dn : dataNodes.values()) {
-                MySQLDataSource ds = dn.getSource();
-                if (ds != null) {
-                    ds.clear();
-                }
-            }
-            return false;
-        }
-
         // 应用重载
-        conf.reload(users, schemas, dataNodes, dataSources, cluster, quarantine);
-
-        // 处理旧的资源
-        for (MySQLDataNode dn : cNodes.values()) {
-            MySQLDataSource ds = dn.getSource();
-            if (ds != null) {
-                ds.clear();
-            }
-        }
+        conf.reload(users, schemas, dataSources, cluster, quarantine);
 
         return true;
     }

@@ -19,7 +19,6 @@
 package com.alibaba.sprite.config;
 
 import java.sql.SQLSyntaxErrorException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +27,6 @@ import com.alibaba.sprite.config.loader.ConfigLoader;
 import com.alibaba.sprite.config.loader.SchemaLoader;
 import com.alibaba.sprite.config.loader.xml.XMLConfigLoader;
 import com.alibaba.sprite.config.loader.xml.XMLSchemaLoader;
-import com.alibaba.sprite.config.model.DataNodeConfig;
 import com.alibaba.sprite.config.model.DataSourceConfig;
 import com.alibaba.sprite.config.model.QuarantineConfig;
 import com.alibaba.sprite.config.model.SchemaConfig;
@@ -36,9 +34,6 @@ import com.alibaba.sprite.config.model.SystemConfig;
 import com.alibaba.sprite.config.model.UserConfig;
 import com.alibaba.sprite.config.util.ConfigException;
 import com.alibaba.sprite.route.config.RouteRuleInitializer;
-import com.alibaba.sprite.server.session.MySQLDataNode;
-import com.alibaba.sprite.server.session.MySQLDataSource;
-import com.alibaba.sprite.util.SplitUtil;
 
 /**
  * @author <a href="mailto:shuo.qius@alibaba-inc.com">QIU Shuo</a>
@@ -49,7 +44,6 @@ public class ConfigInitializer {
     private volatile QuarantineConfig quarantine;
     private volatile Map<String, UserConfig> users;
     private volatile Map<String, SchemaConfig> schemas;
-    private volatile Map<String, MySQLDataNode> dataNodes;
     private volatile Map<String, DataSourceConfig> dataSources;
 
     public ConfigInitializer() {
@@ -65,7 +59,6 @@ public class ConfigInitializer {
         this.users = configLoader.getUserConfigs();
         this.schemas = configLoader.getSchemaConfigs();
         this.dataSources = configLoader.getDataSources();
-        this.dataNodes = initDataNodes(configLoader);
         this.quarantine = configLoader.getQuarantineConfig();
         this.cluster = initCobarCluster(configLoader);
 
@@ -122,10 +115,6 @@ public class ConfigInitializer {
         return schemas;
     }
 
-    public Map<String, MySQLDataNode> getDataNodes() {
-        return dataNodes;
-    }
-
     public Map<String, DataSourceConfig> getDataSources() {
         return dataSources;
     }
@@ -134,41 +123,4 @@ public class ConfigInitializer {
         return new Cluster(configLoader.getClusterConfig());
     }
 
-    private Map<String, MySQLDataNode> initDataNodes(ConfigLoader configLoader) {
-        Map<String, DataNodeConfig> nodeConfs = configLoader.getDataNodes();
-        Map<String, MySQLDataNode> nodes = new HashMap<String, MySQLDataNode>(nodeConfs.size());
-        for (DataNodeConfig conf : nodeConfs.values()) {
-            MySQLDataNode dataNode = getDataNode(conf, configLoader);
-            if (nodes.containsKey(dataNode.getName())) {
-                throw new ConfigException("dataNode " + dataNode.getName() + " duplicated!");
-            }
-            nodes.put(dataNode.getName(), dataNode);
-        }
-        return nodes;
-    }
-
-    private MySQLDataNode getDataNode(DataNodeConfig dnc, ConfigLoader configLoader) {
-        String[] dsNames = SplitUtil.split(dnc.getDataSource(), ',');
-        checkDataSourceExists(dsNames);
-        MySQLDataNode node = new MySQLDataNode(dnc);
-        MySQLDataSource[] dsList = new MySQLDataSource[dsNames.length];
-        int size = dnc.getPoolSize();
-        for (int i = 0; i < dsList.length; i++) {
-            DataSourceConfig dsc = dataSources.get(dsNames[i]);
-            dsList[i] = new MySQLDataSource(node, i, dsc, size);
-        }
-        node.setSources(dsList);
-        return node;
-    }
-
-    private void checkDataSourceExists(String... nodes) {
-        if (nodes == null || nodes.length < 1) {
-            return;
-        }
-        for (String node : nodes) {
-            if (!dataSources.containsKey(node)) {
-                throw new ConfigException("dataSource '" + node + "' is not found!");
-            }
-        }
-    }
 }

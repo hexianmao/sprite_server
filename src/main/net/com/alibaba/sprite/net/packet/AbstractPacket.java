@@ -170,7 +170,7 @@ public abstract class AbstractPacket {
     public static final byte COM_STMT_FETCH = 28;
 
     /**
-     * cobar heartbeat
+     * heartbeat
      */
     public static final byte COM_HEARTBEAT = 64;
 
