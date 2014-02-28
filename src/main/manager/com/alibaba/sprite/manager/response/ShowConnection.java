@@ -28,7 +28,6 @@ import com.alibaba.sprite.net.packet.ResultSetHeaderPacket;
 import com.alibaba.sprite.net.packet.RowDataPacket;
 import com.alibaba.sprite.net.util.BufferQueue;
 import com.alibaba.sprite.net.util.PacketUtil;
-import com.alibaba.sprite.server.ServerConnection;
 import com.alibaba.sprite.util.IntegerUtil;
 import com.alibaba.sprite.util.LongUtil;
 import com.alibaba.sprite.util.StringUtil;
@@ -42,7 +41,7 @@ import com.alibaba.sprite.util.TimeUtil;
  */
 public final class ShowConnection {
 
-    private static final int FIELD_COUNT = 14;
+    private static final int FIELD_COUNT = 11;
     private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
     private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
     private static final EOFPacket eof = new EOFPacket();
@@ -66,12 +65,6 @@ public final class ShowConnection {
         fields[i] = PacketUtil.getField("LOCAL_PORT", Fields.FIELD_TYPE_LONG);
         fields[i++].packetId = ++packetId;
 
-        fields[i] = PacketUtil.getField("SCHEMA", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("CHARSET", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-
         fields[i] = PacketUtil.getField("NET_IN", Fields.FIELD_TYPE_LONGLONG);
         fields[i++].packetId = ++packetId;
 
@@ -88,9 +81,6 @@ public final class ShowConnection {
         fields[i++].packetId = ++packetId;
 
         fields[i] = PacketUtil.getField("SEND_QUEUE", Fields.FIELD_TYPE_LONG);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("CHANNELS", Fields.FIELD_TYPE_LONG);
         fields[i++].packetId = ++packetId;
 
         eof.packetId = ++packetId;
@@ -139,8 +129,6 @@ public final class ShowConnection {
         row.add(StringUtil.encode(c.getHost(), charset));
         row.add(IntegerUtil.toBytes(c.getPort()));
         row.add(IntegerUtil.toBytes(c.getLocalPort()));
-        row.add(StringUtil.encode(c.getSchema(), charset));
-        row.add(StringUtil.encode(c.getCharset(), charset));
         row.add(LongUtil.toBytes(c.getNetInBytes()));
         row.add(LongUtil.toBytes(c.getNetOutBytes()));
         row.add(LongUtil.toBytes((TimeUtil.currentTimeMillis() - c.getStartupTime()) / 1000L));
@@ -149,12 +137,6 @@ public final class ShowConnection {
         row.add(IntegerUtil.toBytes(bb == null ? 0 : bb.capacity()));
         BufferQueue bq = c.getWriteQueue();
         row.add(IntegerUtil.toBytes(bq == null ? 0 : bq.size()));
-        if (c instanceof ServerConnection) {
-            ServerConnection sc = (ServerConnection) c;
-            row.add(IntegerUtil.toBytes(sc.getSession().getTargetCount()));
-        } else {
-            row.add(null);
-        }
         return row;
     }
 
