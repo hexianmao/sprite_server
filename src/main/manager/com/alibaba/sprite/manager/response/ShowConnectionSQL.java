@@ -36,7 +36,7 @@ import com.alibaba.sprite.util.TimeUtil;
  */
 public final class ShowConnectionSQL {
 
-    private static final int FIELD_COUNT = 6;
+    private static final int FIELD_COUNT = 5;
     private static final ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
     private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
     private static final EOFPacket eof = new EOFPacket();
@@ -49,9 +49,6 @@ public final class ShowConnectionSQL {
         fields[i++].packetId = ++packetId;
 
         fields[i] = PacketUtil.getField("HOST", Fields.FIELD_TYPE_VAR_STRING);
-        fields[i++].packetId = ++packetId;
-
-        fields[i] = PacketUtil.getField("SCHEMA", Fields.FIELD_TYPE_VAR_STRING);
         fields[i++].packetId = ++packetId;
 
         fields[i] = PacketUtil.getField("START_TIME", Fields.FIELD_TYPE_LONGLONG);
@@ -106,7 +103,6 @@ public final class ShowConnectionSQL {
         RowDataPacket row = new RowDataPacket(FIELD_COUNT);
         row.add(LongUtil.toBytes(c.getId()));
         row.add(StringUtil.encode(c.getHost(), charset));
-        row.add(StringUtil.encode(c.getSchema(), charset));
         row.add(LongUtil.toBytes(c.getLastReadTime()));
         long rt = c.getLastReadTime();
         long wt = c.getLastWriteTime();
