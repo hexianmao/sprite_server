@@ -1,6 +1,5 @@
 package com.alibaba.sprite;
 
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,7 +31,7 @@ public class SystemTimer {
     }
 
     // 系统时间定时更新任务
-    TimerTask updateTime() {
+    private TimerTask updateTime() {
         return new TimerTask() {
             @Override
             public void run() {
@@ -42,7 +41,7 @@ public class SystemTimer {
     }
 
     // 处理器定时检查任务
-    TimerTask processorCheck(final NIOProcessor[] processors) {
+    private TimerTask processorCheck(final NIOProcessor[] processors) {
         return new TimerTask() {
             @Override
             public void run() {
@@ -58,22 +57,22 @@ public class SystemTimer {
         };
     }
 
-    // 集群节点定时心跳任务
-    TimerTask clusterHeartbeat(final Config config) {
-        return new TimerTask() {
-            @Override
-            public void run() {
-                Sprite.getInstance().getTaskExecutor().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        Map<String, Node> nodes = config.getCluster().getNodes();
-                        for (Node node : nodes.values()) {
-                            node.doHeartbeat();
-                        }
-                    }
-                });
-            }
-        };
-    }
+    //    // 集群节点定时心跳任务
+    //    private TimerTask clusterHeartbeat(final Config config) {
+    //        return new TimerTask() {
+    //            @Override
+    //            public void run() {
+    //                Sprite.getInstance().getTaskExecutor().execute(new Runnable() {
+    //                    @Override
+    //                    public void run() {
+    //                        Map<String, Node> nodes = config.getCluster().getNodes();
+    //                        for (Node node : nodes.values()) {
+    //                            node.doHeartbeat();
+    //                        }
+    //                    }
+    //                });
+    //            }
+    //        };
+    //    }
 
 }

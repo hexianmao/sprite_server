@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.Privileges;
 import com.alibaba.sprite.config.ErrorCode;
 import com.alibaba.sprite.net.handler.NIOHandler;
 import com.alibaba.sprite.net.packet.AbstractPacket;

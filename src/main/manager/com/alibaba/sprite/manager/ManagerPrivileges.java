@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.Privileges;
 import com.alibaba.sprite.Sprite;
 import com.alibaba.sprite.config.Alarms;
 import com.alibaba.sprite.config.Config;
