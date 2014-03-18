@@ -23,21 +23,13 @@
       <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
     </layout>
   </appender>
-  <appender name="ALARM" class="org.apache.log4j.ConsoleAppender">
-    <param name="encoding" value="UTF-8" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
-    </layout>
-  </appender>
-  <appender name="HEARTBEAT" class="org.apache.log4j.ConsoleAppender">
-    <param name="encoding" value="UTF-8" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
-    </layout>
-  </appender>
 
-  <logger name="com.alibaba.sprite.Sprite">
+  <logger name="com.alibaba.sprite.MainServer">
     <level value="info" />
+  </logger>
+
+  <logger name="com.alibaba.sprite.manager.ManagerQueryHandler">
+    <level value="debug" />
   </logger>
 
   <root>

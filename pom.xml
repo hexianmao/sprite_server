@@ -3,12 +3,10 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.alibaba.sprite</groupId>
-  <artifactId>sprite_server</artifactId>
+  <artifactId>sprite-server</artifactId>
   <version>${app.version}</version>
   <packaging>jar</packaging>
   <name>${artifactId}</name>
-  <description>Beautiful spirit</description>
-  <url>https://github.com/hexianmao/sprite/wiki</url>
 
   <properties>
     <app.encoding>UTF-8</app.encoding>
@@ -39,29 +37,6 @@
           <target>1.7</target>
           <encoding>${app.encoding}</encoding>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/main/net</source>
-                <source>src/main/parser</source>
-                <source>src/main/config</source>
-                <source>src/main/route</source>
-                <source>src/main/server</source>
-                <source>src/main/manager</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -99,7 +74,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <finalName>sprite-${app.version}</finalName>
+          <finalName>${artifactId}-${app.version}</finalName>
           <descriptors>
             <descriptor>assembly/assembly.xml</descriptor>
           </descriptors>

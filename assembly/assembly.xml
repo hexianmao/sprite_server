@@ -23,12 +23,12 @@
   <includeBaseDirectory>true</includeBaseDirectory>
   <files>
     <file>
-      <source>./COPYRIGHT</source>
+      <source>assembly/COPYRIGHT</source>
       <outputDirectory>/</outputDirectory>
       <filtered>true</filtered>
     </file>
     <file>
-      <source>./LICENSE</source>
+      <source>assembly/LICENSE</source>
       <outputDirectory>/</outputDirectory>
       <filtered>true</filtered>
     </file>

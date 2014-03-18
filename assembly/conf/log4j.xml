@@ -25,39 +25,13 @@
       <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
     </layout>
   </appender>
-  <appender name="ALARM" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${sprite.home}/logs/alarm.log" />
-    <param name="append" value="true" />
-    <param name="encoding" value="UTF-8" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
-    </layout>
-  </appender>
-  <appender name="HEARTBEAT" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${sprite.home}/logs/heartbeat.log" />
-    <param name="append" value="true" />
-    <param name="encoding" value="UTF-8" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
-    </layout>
-  </appender>
 
-  <logger name="com.alibaba.cobar.CobarServer">
+  <logger name="com.alibaba.sprite.MainServer">
     <level value="info" />
   </logger>
-  <logger name="com.alibaba.cobar.net.handler.FrontendAuthenticator">
-    <level value="info" />
-  </logger>
-  <logger name="com.alibaba.cobar.mysql.MySQLDataNode">
-    <level value="info" />
-  </logger>
-  <logger name="alarm">
-    <level value="error" />
-    <appender-ref ref="ALARM" />
-  </logger>
-  <logger name="heartbeat" additivity="false">
-    <level value="warn" />
-    <appender-ref ref="HEARTBEAT" />
+
+  <logger name="com.alibaba.sprite.manager.ManagerQueryHandler">
+    <level value="debug" />
   </logger>
 
   <root>
