@@ -22,7 +22,7 @@ public class SystemConfig {
 
     private static final int MANAGER_DEFAULT_PORT = 9999;
     private static final int SERVER_DEFAULT_PORT = 8888;
-    private static final int SERVER_DEFAULT_EXECUTOR = 4;
+    private static final int SERVER_DEFAULT_EXECUTOR = 8;
     private static final int PROCESSOR_DEFAULT_COUNT = 4;
     private static final int PROCESSOR_DEFAULT_EXECUTOR = 4;
     private static final int PROCESSOR_DEFAULT_BUFFER_SIZE = 1024 * 1024 * 16;
