@@ -20,18 +20,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.core.Fields;
+import com.alibaba.sprite.core.NameableExecutor;
+import com.alibaba.sprite.core.net.Processor;
+import com.alibaba.sprite.core.packet.RsEOFPacket;
+import com.alibaba.sprite.core.packet.RsFieldPacket;
+import com.alibaba.sprite.core.packet.RsHeaderPacket;
+import com.alibaba.sprite.core.packet.RsRowDataPacket;
+import com.alibaba.sprite.core.util.IntegerUtil;
+import com.alibaba.sprite.core.util.LongUtil;
+import com.alibaba.sprite.core.util.PacketUtil;
+import com.alibaba.sprite.core.util.StringUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
-import com.alibaba.sprite.net.Processor;
-import com.alibaba.sprite.packet.rs.EOFPacket;
-import com.alibaba.sprite.packet.rs.FieldPacket;
-import com.alibaba.sprite.packet.rs.RowDataPacket;
-import com.alibaba.sprite.packet.rs.RsHeaderPacket;
-import com.alibaba.sprite.util.Fields;
-import com.alibaba.sprite.util.IntegerUtil;
-import com.alibaba.sprite.util.LongUtil;
-import com.alibaba.sprite.util.NameableExecutor;
-import com.alibaba.sprite.util.PacketUtil;
-import com.alibaba.sprite.util.StringUtil;
 
 /**
  * 查看线程池状态
@@ -42,8 +42,8 @@ public final class ShowThreadPool {
 
     private static final int FIELD_COUNT = 6;
     private static final RsHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final RsFieldPacket[] fields = new RsFieldPacket[FIELD_COUNT];
+    private static final RsEOFPacket eof = new RsEOFPacket();
     static {
         int i = 0;
         byte packetId = 0;
@@ -77,7 +77,7 @@ public final class ShowThreadPool {
         buffer = header.write(buffer, c);
 
         // write fields
-        for (FieldPacket field : fields) {
+        for (RsFieldPacket field : fields) {
             buffer = field.write(buffer, c);
         }
 
@@ -89,14 +89,14 @@ public final class ShowThreadPool {
         List<NameableExecutor> executors = getExecutors();
         for (NameableExecutor exec : executors) {
             if (exec != null) {
-                RowDataPacket row = getRow(exec, c.getCharset());
+                RsRowDataPacket row = getRow(exec, c.getCharset());
                 row.packetId = ++packetId;
                 buffer = row.write(buffer, c);
             }
         }
 
         // write last eof
-        EOFPacket lastEof = new EOFPacket();
+        RsEOFPacket lastEof = new RsEOFPacket();
         lastEof.packetId = ++packetId;
         buffer = lastEof.write(buffer, c);
 
@@ -104,8 +104,8 @@ public final class ShowThreadPool {
         c.postWrite(buffer);
     }
 
-    private static RowDataPacket getRow(NameableExecutor exec, String charset) {
-        RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+    private static RsRowDataPacket getRow(NameableExecutor exec, String charset) {
+        RsRowDataPacket row = new RsRowDataPacket(FIELD_COUNT);
         row.add(StringUtil.encode(exec.getName(), charset));
         row.add(IntegerUtil.toBytes(exec.getPoolSize()));
         row.add(IntegerUtil.toBytes(exec.getActiveCount()));

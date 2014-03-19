@@ -18,11 +18,11 @@ package com.alibaba.sprite.manager.handler;
 import static com.alibaba.sprite.manager.parser.ManagerParseSelect.SESSION_AUTO_INCREMENT;
 import static com.alibaba.sprite.manager.parser.ManagerParseSelect.VERSION_COMMENT;
 
+import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.manager.parser.ManagerParseSelect;
 import com.alibaba.sprite.manager.response.SelectSessionAutoIncrement;
 import com.alibaba.sprite.manager.response.SelectVersionComment;
-import com.alibaba.sprite.util.ErrorCode;
 
 /**
  * @author xianmao.hexm

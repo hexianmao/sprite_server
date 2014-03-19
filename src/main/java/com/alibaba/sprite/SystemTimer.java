@@ -3,7 +3,7 @@ package com.alibaba.sprite;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.alibaba.sprite.util.TimeUtil;
+import com.alibaba.sprite.core.util.TimeUtil;
 
 /**
  * @author hexianmao

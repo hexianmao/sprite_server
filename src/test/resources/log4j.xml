@@ -28,7 +28,7 @@
     <level value="info" />
   </logger>
 
-  <logger name="com.alibaba.sprite.manager.ManagerQueryHandler">
+  <logger name="com.alibaba.sprite.manager.handler.QueryHandler">
     <level value="debug" />
   </logger>
 

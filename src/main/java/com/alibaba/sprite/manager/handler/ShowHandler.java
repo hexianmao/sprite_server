@@ -15,6 +15,7 @@
  */
 package com.alibaba.sprite.manager.handler;
 
+import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.manager.parser.ManagerParseShow;
 import com.alibaba.sprite.manager.response.ShowCollation;
@@ -29,7 +30,6 @@ import com.alibaba.sprite.manager.response.ShowThreadPool;
 import com.alibaba.sprite.manager.response.ShowTime;
 import com.alibaba.sprite.manager.response.ShowVariables;
 import com.alibaba.sprite.manager.response.ShowVersion;
-import com.alibaba.sprite.util.ErrorCode;
 
 /**
  * @author xianmao.hexm

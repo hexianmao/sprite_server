@@ -15,9 +15,9 @@
  */
 package com.alibaba.sprite.manager.handler;
 
+import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.manager.parser.ManagerParseReload;
-import com.alibaba.sprite.util.ErrorCode;
 
 /**
  * @author xianmao.hexm

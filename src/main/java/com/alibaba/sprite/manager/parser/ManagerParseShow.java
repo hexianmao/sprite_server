@@ -15,7 +15,7 @@
  */
 package com.alibaba.sprite.manager.parser;
 
-import com.alibaba.sprite.util.ParseUtil;
+import com.alibaba.sprite.core.util.ParseUtil;
 
 /**
  * @author xianmao.hexm 2011-5-7 下午02:02:27

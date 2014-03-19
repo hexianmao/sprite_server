@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
-import com.alibaba.sprite.net.Connection;
-import com.alibaba.sprite.net.ConnectionFactory;
-import com.alibaba.sprite.util.BufferQueue;
+import com.alibaba.sprite.core.BufferQueue;
+import com.alibaba.sprite.core.net.Connection;
+import com.alibaba.sprite.core.net.ConnectionFactory;
 
 /**
  * @author xianmao.hexm
@@ -49,7 +49,7 @@ public final class ServerConnectionFactory implements ConnectionFactory {
         c.setWriteQueue(new BufferQueue(writeQueueCapcity));
         c.setIdleTimeout(idleTimeout);
         c.setCharset(charset);
-        c.setHandler(new ServerAuthHandler(c));
+        c.setHandler(new ServerAuthenticator(c));
         return c;
     }
 

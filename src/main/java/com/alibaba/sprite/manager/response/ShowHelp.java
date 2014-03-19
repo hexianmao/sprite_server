@@ -22,14 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.sprite.core.Fields;
+import com.alibaba.sprite.core.packet.RsEOFPacket;
+import com.alibaba.sprite.core.packet.RsFieldPacket;
+import com.alibaba.sprite.core.packet.RsHeaderPacket;
+import com.alibaba.sprite.core.packet.RsRowDataPacket;
+import com.alibaba.sprite.core.util.PacketUtil;
+import com.alibaba.sprite.core.util.StringUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
-import com.alibaba.sprite.packet.rs.EOFPacket;
-import com.alibaba.sprite.packet.rs.FieldPacket;
-import com.alibaba.sprite.packet.rs.RowDataPacket;
-import com.alibaba.sprite.packet.rs.RsHeaderPacket;
-import com.alibaba.sprite.util.Fields;
-import com.alibaba.sprite.util.PacketUtil;
-import com.alibaba.sprite.util.StringUtil;
 
 /**
  * 打印CobarServer所支持的语句
@@ -41,8 +41,8 @@ public final class ShowHelp {
 
     private static final int FIELD_COUNT = 2;
     private static final RsHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final RsFieldPacket[] fields = new RsFieldPacket[FIELD_COUNT];
+    private static final RsEOFPacket eof = new RsEOFPacket();
     static {
         int i = 0;
         byte packetId = 0;
@@ -64,7 +64,7 @@ public final class ShowHelp {
         buffer = header.write(buffer, c);
 
         // write fields
-        for (FieldPacket field : fields) {
+        for (RsFieldPacket field : fields) {
             buffer = field.write(buffer, c);
         }
 
@@ -74,13 +74,13 @@ public final class ShowHelp {
         // write rows
         byte packetId = eof.packetId;
         for (String key : keys) {
-            RowDataPacket row = getRow(key, helps.get(key), c.getCharset());
+            RsRowDataPacket row = getRow(key, helps.get(key), c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);
         }
 
         // write last eof
-        EOFPacket lastEof = new EOFPacket();
+        RsEOFPacket lastEof = new RsEOFPacket();
         lastEof.packetId = ++packetId;
         buffer = lastEof.write(buffer, c);
 
@@ -88,8 +88,8 @@ public final class ShowHelp {
         c.postWrite(buffer);
     }
 
-    private static RowDataPacket getRow(String stmt, String desc, String charset) {
-        RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+    private static RsRowDataPacket getRow(String stmt, String desc, String charset) {
+        RsRowDataPacket row = new RsRowDataPacket(FIELD_COUNT);
         row.add(StringUtil.encode(stmt, charset));
         row.add(StringUtil.encode(desc, charset));
         return row;

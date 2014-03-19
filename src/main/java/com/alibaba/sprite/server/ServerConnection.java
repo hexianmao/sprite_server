@@ -29,19 +29,19 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.net.Connection;
-import com.alibaba.sprite.net.Handler;
-import com.alibaba.sprite.net.Processor;
-import com.alibaba.sprite.packet.ErrorPacket;
-import com.alibaba.sprite.packet.HandshakePacket;
-import com.alibaba.sprite.util.BufferPool;
-import com.alibaba.sprite.util.BufferQueue;
-import com.alibaba.sprite.util.Capabilities;
-import com.alibaba.sprite.util.CharsetUtil;
-import com.alibaba.sprite.util.ErrorCode;
-import com.alibaba.sprite.util.RandomUtil;
-import com.alibaba.sprite.util.TimeUtil;
-import com.alibaba.sprite.util.Versions;
+import com.alibaba.sprite.core.BufferPool;
+import com.alibaba.sprite.core.BufferQueue;
+import com.alibaba.sprite.core.Capabilities;
+import com.alibaba.sprite.core.ErrorCode;
+import com.alibaba.sprite.core.Versions;
+import com.alibaba.sprite.core.net.Connection;
+import com.alibaba.sprite.core.net.Handler;
+import com.alibaba.sprite.core.net.Processor;
+import com.alibaba.sprite.core.packet.ErrorPacket;
+import com.alibaba.sprite.core.packet.HandshakePacket;
+import com.alibaba.sprite.core.util.CharsetUtil;
+import com.alibaba.sprite.core.util.RandomUtil;
+import com.alibaba.sprite.core.util.TimeUtil;
 
 /**
  * @author xianmao.hexm

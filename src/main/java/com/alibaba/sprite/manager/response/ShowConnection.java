@@ -17,14 +17,14 @@ package com.alibaba.sprite.manager.response;
 
 import java.nio.ByteBuffer;
 
+import com.alibaba.sprite.core.Fields;
+import com.alibaba.sprite.core.packet.RsEOFPacket;
+import com.alibaba.sprite.core.packet.RsFieldPacket;
+import com.alibaba.sprite.core.packet.RsHeaderPacket;
+import com.alibaba.sprite.core.packet.RsRowDataPacket;
+import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
-import com.alibaba.sprite.packet.rs.EOFPacket;
-import com.alibaba.sprite.packet.rs.FieldPacket;
-import com.alibaba.sprite.packet.rs.RowDataPacket;
-import com.alibaba.sprite.packet.rs.RsHeaderPacket;
 import com.alibaba.sprite.server.ServerConnection;
-import com.alibaba.sprite.util.Fields;
-import com.alibaba.sprite.util.PacketUtil;
 
 /**
  * 查看当前有效连接信息
@@ -36,8 +36,8 @@ public final class ShowConnection {
 
     private static final int FIELD_COUNT = 11;
     private static final RsHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
-    private static final FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
-    private static final EOFPacket eof = new EOFPacket();
+    private static final RsFieldPacket[] fields = new RsFieldPacket[FIELD_COUNT];
+    private static final RsEOFPacket eof = new RsEOFPacket();
     static {
         int i = 0;
         byte packetId = 0;
@@ -86,7 +86,7 @@ public final class ShowConnection {
         buffer = header.write(buffer, c);
 
         // write fields
-        for (FieldPacket field : fields) {
+        for (RsFieldPacket field : fields) {
             buffer = field.write(buffer, c);
         }
 
@@ -107,7 +107,7 @@ public final class ShowConnection {
         // }
 
         // write last eof
-        EOFPacket lastEof = new EOFPacket();
+        RsEOFPacket lastEof = new RsEOFPacket();
         lastEof.packetId = ++packetId;
         buffer = lastEof.write(buffer, c);
 
@@ -115,8 +115,8 @@ public final class ShowConnection {
         c.postWrite(buffer);
     }
 
-    static RowDataPacket getRow(ServerConnection c, String charset) {
-        RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+    static RsRowDataPacket getRow(ServerConnection c, String charset) {
+        RsRowDataPacket row = new RsRowDataPacket(FIELD_COUNT);
         //        row.add(c.getProcessor().getName().getBytes());
         //        row.add(LongUtil.toBytes(c.getId()));
         //        row.add(StringUtil.encode(c.getHost(), charset));
