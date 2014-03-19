@@ -25,7 +25,7 @@ public class SystemConfig {
     private static final int SERVER_DEFAULT_EXECUTOR = 8;
     private static final int PROCESSOR_DEFAULT_COUNT = 4;
     private static final int PROCESSOR_DEFAULT_EXECUTOR = 4;
-    private static final int PROCESSOR_DEFAULT_BUFFER_SIZE = 1024 * 1024 * 16;
+    private static final int PROCESSOR_DEFAULT_BUFFER_SIZE = 32 * 1024 * 1024;
     private static final int PROCESSOR_DEFAULT_CHUNK_SIZE = 4096;
 
     private int serverPort;
