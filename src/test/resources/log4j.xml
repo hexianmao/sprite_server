@@ -24,7 +24,7 @@
     </layout>
   </appender>
 
-  <logger name="com.alibaba.sprite.MainServer">
+  <logger name="com.alibaba.sprite.SpriteServer">
     <level value="info" />
   </logger>
 

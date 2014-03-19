@@ -165,4 +165,19 @@ public class PacketTypes {
      */
     public static final byte COM_STMT_FETCH = 28;
 
+    /**
+     * 回应
+     */
+    public static final byte COM_ECHO = 32;
+
+    /**
+     * 呼叫
+     */
+    public static final byte COM_CALL = 33;
+
+    /**
+     * 应答
+     */
+    public static final byte COM_ANSWER = 34;
+
 }

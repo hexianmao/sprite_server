@@ -17,7 +17,7 @@ package com.alibaba.sprite.manager.response;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.packet.RsEOFPacket;
 import com.alibaba.sprite.core.packet.RsFieldPacket;
@@ -98,7 +98,7 @@ public final class ShowServer {
     }
 
     private static RsRowDataPacket getRow(String charset) {
-        MainServer server = MainServer.getInstance();
+        SpriteServer server = SpriteServer.getInstance();
         long startupTime = server.getStartupTime();
         long now = TimeUtil.currentTimeMillis();
         long uptime = now - startupTime;

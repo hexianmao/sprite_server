@@ -38,6 +38,8 @@ public interface Connection {
 
     void error(int errCode, Throwable t);
 
+    boolean close();
+
     ByteBuffer allocate();
 
     void postWrite(ByteBuffer buffer);

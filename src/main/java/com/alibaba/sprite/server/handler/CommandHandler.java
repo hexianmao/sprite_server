@@ -39,17 +39,29 @@ public final class CommandHandler implements Handler {
         switch (data[4]) {
         case PacketTypes.COM_INIT_DB:
         case PacketTypes.COM_PING:
-        case PacketTypes.COM_QUERY:
+        case PacketTypes.COM_QUERY: {
             ByteBuffer buffer = source.allocate();
             buffer = source.writeToBuffer(OkPacket.OK, buffer);
             source.postWrite(buffer);
             break;
+        }
+        case PacketTypes.COM_ECHO: {
+            ByteBuffer buffer = source.allocate();
+            buffer = source.writeToBuffer(data, buffer);
+            source.postWrite(buffer);
+            break;
+        }
+        case PacketTypes.COM_CALL: {
+
+            break;
+        }
         case PacketTypes.COM_QUIT:
-        case PacketTypes.COM_PROCESS_KILL:
+        case PacketTypes.COM_PROCESS_KILL: {
             source.close();
             break;
+        }
         default:
-            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "UNKNOWN_COM_ERROR");
+            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "unknown command");
         }
     }
 

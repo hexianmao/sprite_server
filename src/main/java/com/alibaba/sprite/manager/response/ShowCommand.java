@@ -17,7 +17,7 @@ package com.alibaba.sprite.manager.response;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.net.Processor;
 import com.alibaba.sprite.core.packet.RsEOFPacket;
@@ -93,7 +93,7 @@ public final class ShowCommand {
 
         // write rows
         byte packetId = eof.packetId;
-        for (Processor p : MainServer.getInstance().getProcessors()) {
+        for (Processor p : SpriteServer.getInstance().getProcessors()) {
             RsRowDataPacket row = getRow(p, c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);

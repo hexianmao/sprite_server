@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.net.Processor;
 import com.alibaba.sprite.core.packet.RsEOFPacket;
@@ -77,7 +77,7 @@ public final class ShowRouter {
 
         // write rows
         byte packetId = eof.packetId;
-        for (Processor p : MainServer.getInstance().getProcessors()) {
+        for (Processor p : SpriteServer.getInstance().getProcessors()) {
             RsRowDataPacket row = getRow(p, c.getCharset());
             row.packetId = ++packetId;
             buffer = row.write(buffer, c);

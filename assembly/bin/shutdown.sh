@@ -39,7 +39,7 @@ JAVA_OPTS="-Xss256k"
 #==============================================================================
 
 #stop Server
-$JAVA_HOME/bin/jps |grep Sprite|awk -F ' ' '{print $1}'|while read line
+$JAVA_HOME/bin/jps |grep SpriteServer|awk -F ' ' '{print $1}'|while read line
 do
   eval "kill -9 $line"
 done

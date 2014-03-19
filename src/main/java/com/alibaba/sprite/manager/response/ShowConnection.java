@@ -17,12 +17,18 @@ package com.alibaba.sprite.manager.response;
 
 import java.nio.ByteBuffer;
 
+import com.alibaba.sprite.SpriteServer;
+import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.packet.RsEOFPacket;
 import com.alibaba.sprite.core.packet.RsFieldPacket;
 import com.alibaba.sprite.core.packet.RsHeaderPacket;
 import com.alibaba.sprite.core.packet.RsRowDataPacket;
+import com.alibaba.sprite.core.util.IntegerUtil;
+import com.alibaba.sprite.core.util.LongUtil;
 import com.alibaba.sprite.core.util.PacketUtil;
+import com.alibaba.sprite.core.util.StringUtil;
+import com.alibaba.sprite.core.util.TimeUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.server.ServerConnection;
 
@@ -95,16 +101,14 @@ public final class ShowConnection {
 
         // write rows
         byte packetId = eof.packetId;
-        //String charset = c.getCharset();
-        //for (Processor p : MainServer.getInstance().getProcessors()) {
-        //            for (FrontendConnection fc : p.getFrontends().values()) {
-        //                if (fc != null) {
-        //                    RowDataPacket row = getRow(fc, charset);
-        //                    row.packetId = ++packetId;
-        //                    buffer = row.write(buffer, c);
-        //                }
-        //            }
-        // }
+        String charset = c.getCharset();
+        for (ServerConnection sc : SpriteServer.getInstance().getUsers().values()) {
+            if (sc != null) {
+                RsRowDataPacket row = getRow(sc, charset);
+                row.packetId = ++packetId;
+                buffer = row.write(buffer, c);
+            }
+        }
 
         // write last eof
         RsEOFPacket lastEof = new RsEOFPacket();
@@ -115,21 +119,21 @@ public final class ShowConnection {
         c.postWrite(buffer);
     }
 
-    static RsRowDataPacket getRow(ServerConnection c, String charset) {
+    private static RsRowDataPacket getRow(ServerConnection c, String charset) {
         RsRowDataPacket row = new RsRowDataPacket(FIELD_COUNT);
-        //        row.add(c.getProcessor().getName().getBytes());
-        //        row.add(LongUtil.toBytes(c.getId()));
-        //        row.add(StringUtil.encode(c.getHost(), charset));
-        //        row.add(IntegerUtil.toBytes(c.getPort()));
-        //        row.add(IntegerUtil.toBytes(c.getLocalPort()));
-        //        row.add(LongUtil.toBytes(c.getNetInBytes()));
-        //        row.add(LongUtil.toBytes(c.getNetOutBytes()));
-        //        row.add(LongUtil.toBytes((TimeUtil.currentTimeMillis() - c.getStartupTime()) / 1000L));
-        //        row.add(IntegerUtil.toBytes(c.getWriteAttempts()));
-        //        ByteBuffer bb = c.getReadBuffer();
-        //        row.add(IntegerUtil.toBytes(bb == null ? 0 : bb.capacity()));
-        //        BufferQueue bq = c.getWriteQueue();
-        //        row.add(IntegerUtil.toBytes(bq == null ? 0 : bq.size()));
+        row.add(c.getProcessor().getName().getBytes());
+        row.add(LongUtil.toBytes(c.getId()));
+        row.add(StringUtil.encode(c.getHost(), charset));
+        row.add(IntegerUtil.toBytes(c.getPort()));
+        row.add(IntegerUtil.toBytes(c.getLocalPort()));
+        row.add(LongUtil.toBytes(c.getNetInBytes()));
+        row.add(LongUtil.toBytes(c.getNetOutBytes()));
+        row.add(LongUtil.toBytes((TimeUtil.currentTimeMillis() - c.getStartupTime()) / 1000L));
+        row.add(IntegerUtil.toBytes(c.getWriteAttempts()));
+        ByteBuffer bb = c.getReadBuffer();
+        row.add(IntegerUtil.toBytes(bb == null ? 0 : bb.capacity()));
+        BufferQueue bq = c.getWriteQueue();
+        row.add(IntegerUtil.toBytes(bq == null ? 0 : bq.size()));
         return row;
     }
 

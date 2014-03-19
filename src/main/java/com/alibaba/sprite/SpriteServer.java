@@ -3,6 +3,8 @@ package com.alibaba.sprite;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.LogLog;
@@ -14,18 +16,19 @@ import com.alibaba.sprite.core.net.Processor;
 import com.alibaba.sprite.core.util.ExecutorUtil;
 import com.alibaba.sprite.core.util.TimeUtil;
 import com.alibaba.sprite.manager.ManagerConnectionFactory;
+import com.alibaba.sprite.server.ServerConnection;
 import com.alibaba.sprite.server.ServerConnectionFactory;
 
 /**
  * @author xianmao.hexm
  */
-public class MainServer {
+public class SpriteServer {
 
-    private static final String NAME = MainServer.class.getSimpleName();
-    private static final Logger LOGGER = Logger.getLogger(MainServer.class);
+    private static final String NAME = SpriteServer.class.getSimpleName();
+    private static final Logger LOGGER = Logger.getLogger(SpriteServer.class);
     private static final long LOG_WATCH_DELAY = 60000L;
     private static final String DATA_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private static final MainServer INSTANCE = new MainServer();
+    private static final SpriteServer INSTANCE = new SpriteServer();
 
     private SystemConfig config;
     private SystemTimer serverTimer;
@@ -34,13 +37,10 @@ public class MainServer {
     private Processor[] processors;
     private NameableExecutor executor;
     private long startupTime;
+    private ConcurrentMap<String, ServerConnection> users;
 
-    public static final MainServer getInstance() {
+    public static final SpriteServer getInstance() {
         return INSTANCE;
-    }
-
-    public long getStartupTime() {
-        return startupTime;
     }
 
     public NameableExecutor getExecutor() {
@@ -51,10 +51,19 @@ public class MainServer {
         return processors;
     }
 
-    private MainServer() {
+    public ConcurrentMap<String, ServerConnection> getUsers() {
+        return users;
+    }
+
+    public long getStartupTime() {
+        return startupTime;
+    }
+
+    private SpriteServer() {
         this.config = SystemConfig.getDefault();
         this.serverTimer = new SystemTimer();
         this.executor = ExecutorUtil.create("Server-Executor", config.getServerExecutor());
+        this.users = new ConcurrentHashMap<String, ServerConnection>();
         this.startupTime = TimeUtil.currentTimeMillis();
     }
 
@@ -109,7 +118,7 @@ public class MainServer {
 
     public static void main(String[] args) {
         try {
-            MainServer.getInstance().startup();
+            SpriteServer.getInstance().startup();
         } catch (Throwable e) {
             SimpleDateFormat sdf = new SimpleDateFormat(DATA_FORMAT);
             LogLog.error(sdf.format(new Date()) + " startup error", e);

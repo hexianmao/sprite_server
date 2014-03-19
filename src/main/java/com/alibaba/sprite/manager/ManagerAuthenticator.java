@@ -118,6 +118,7 @@ public final class ManagerAuthenticator implements Handler {
     protected void failure(int errno, String info) {
         LOGGER.error(source.toString() + info);
         source.writeErrMessage((byte) 2, errno, info);
+        source.close();
     }
 
 }

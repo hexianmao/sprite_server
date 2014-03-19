@@ -17,9 +17,11 @@ package com.alibaba.sprite.server;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.PacketTypes;
 import com.alibaba.sprite.core.net.Handler;
@@ -35,6 +37,7 @@ public final class ServerAuthenticator implements Handler {
 
     private static final Logger LOGGER = Logger.getLogger(ServerAuthenticator.class);
     private static final byte[] AUTH_OK = new byte[] { 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 };
+    private static final String SECURITY_KEY = "&(~ER#*&^gy9JK";
 
     protected final ServerConnection source;
 
@@ -53,7 +56,9 @@ public final class ServerAuthenticator implements Handler {
         // check auth packet
         AuthPacket packet = new AuthPacket();
         packet.read(data);
-        if (check(packet)) {
+        ConcurrentMap<String, ServerConnection> users = SpriteServer.getInstance().getUsers();
+        if (check(packet) && !users.containsKey(packet.user)) {
+            users.put(packet.user, source);
             success(packet);
         } else {
             failure(ErrorCode.ER_ACCESS_DENIED_ERROR, "Access denied for user '" + packet.user + "'");
@@ -61,8 +66,15 @@ public final class ServerAuthenticator implements Handler {
     }
 
     protected boolean check(AuthPacket packet) {
+        // check user
+        String user = packet.user;
+        if (user == null || user.length() == 0 || SpriteServer.getInstance().getUsers().containsKey(packet.user)) {
+            return false;
+        }
+
+        // check password
         byte[] clientPass = packet.password;
-        String passSource = "";
+        String passSource = SECURITY_KEY;
 
         // check null
         if (passSource == null || passSource.length() == 0) {
@@ -99,6 +111,7 @@ public final class ServerAuthenticator implements Handler {
     }
 
     protected void success(AuthPacket packet) {
+        source.setUser(packet.user);
         source.setAuthenticated(true);
         source.setHandler(new CommandHandler(source));
         if (LOGGER.isInfoEnabled()) {
@@ -117,6 +130,7 @@ public final class ServerAuthenticator implements Handler {
     protected void failure(int errno, String info) {
         LOGGER.error(source.toString() + info);
         source.writeErrMessage((byte) 2, errno, info);
+        source.close();
     }
 
 }

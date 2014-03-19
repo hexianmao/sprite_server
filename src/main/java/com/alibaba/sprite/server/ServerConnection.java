@@ -29,6 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.BufferPool;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.Capabilities;
@@ -58,6 +59,7 @@ public final class ServerConnection implements Connection {
     private final ReentrantLock writeLock;
     private final AtomicBoolean isClosed;
     private long id;
+    private String user;
     private String host;
     private int port;
     private int localPort;
@@ -74,10 +76,12 @@ public final class ServerConnection implements Connection {
     private SelectionKey selectionKey;
     private byte[] authSeed;
     private boolean isAuthenticated;
+    private long startupTime;
     private long lastReadTime;
     private long lastWriteTime;
     private long netInBytes;
     private long netOutBytes;
+    private int writeAttempts;
     private Handler handler;
 
     public ServerConnection(SocketChannel channel) {
@@ -85,8 +89,9 @@ public final class ServerConnection implements Connection {
         this.keyLock = new ReentrantLock();
         this.writeLock = new ReentrantLock();
         this.isClosed = new AtomicBoolean(false);
-        this.lastReadTime = TimeUtil.currentTimeMillis();
-        this.lastWriteTime = this.lastReadTime;
+        this.startupTime = TimeUtil.currentTimeMillis();
+        this.lastReadTime = this.startupTime;
+        this.lastWriteTime = this.startupTime;
     }
 
     public long getNetInBytes() {
@@ -97,8 +102,28 @@ public final class ServerConnection implements Connection {
         return netOutBytes;
     }
 
+    public int getWriteAttempts() {
+        return writeAttempts;
+    }
+
     public byte[] getAuthSeed() {
         return authSeed;
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public ByteBuffer getReadBuffer() {
+        return readBuffer;
+    }
+
+    public BufferQueue getWriteQueue() {
+        return writeQueue;
+    }
+
+    public long getStartupTime() {
+        return startupTime;
     }
 
     public long getId() {
@@ -109,12 +134,32 @@ public final class ServerConnection implements Connection {
         this.id = id;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
     public void setHost(String host) {
         this.host = host;
     }
 
+    public int getPort() {
+        return port;
+    }
+
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public int getLocalPort() {
+        return localPort;
     }
 
     public void setLocalPort(int localPort) {
@@ -533,20 +578,6 @@ public final class ServerConnection implements Connection {
         }
     }
 
-    private byte[] encodeString(String src, String charset) {
-        if (src == null) {
-            return null;
-        }
-        if (charset == null) {
-            return src.getBytes();
-        }
-        try {
-            return src.getBytes(charset);
-        } catch (UnsupportedEncodingException e) {
-            return src.getBytes();
-        }
-    }
-
     /**
      * 获取数据包长度
      */
@@ -575,27 +606,6 @@ public final class ServerConnection implements Connection {
         }
     }
 
-    private int getServerCapabilities() {
-        int flag = 0;
-        flag |= Capabilities.CLIENT_LONG_PASSWORD;
-        flag |= Capabilities.CLIENT_FOUND_ROWS;
-        flag |= Capabilities.CLIENT_LONG_FLAG;
-        flag |= Capabilities.CLIENT_CONNECT_WITH_DB;
-        // flag |= Capabilities.CLIENT_NO_SCHEMA;
-        // flag |= Capabilities.CLIENT_COMPRESS;
-        flag |= Capabilities.CLIENT_ODBC;
-        // flag |= Capabilities.CLIENT_LOCAL_FILES;
-        flag |= Capabilities.CLIENT_IGNORE_SPACE;
-        flag |= Capabilities.CLIENT_PROTOCOL_41;
-        flag |= Capabilities.CLIENT_INTERACTIVE;
-        // flag |= Capabilities.CLIENT_SSL;
-        flag |= Capabilities.CLIENT_IGNORE_SIGPIPE;
-        flag |= Capabilities.CLIENT_TRANSACTIONS;
-        // flag |= ServerDefs.CLIENT_RESERVED;
-        flag |= Capabilities.CLIENT_SECURE_CONNECTION;
-        return flag;
-    }
-
     private boolean write0() throws IOException {
         // 检查是否有遗留数据未写出
         ByteBuffer buffer = writeQueue.attachment();
@@ -607,6 +617,7 @@ public final class ServerConnection implements Connection {
             }
             lastWriteTime = TimeUtil.currentTimeMillis();
             if (buffer.hasRemaining()) {
+                writeAttempts++;
                 return false;
             } else {
                 writeQueue.attach(null);
@@ -630,6 +641,7 @@ public final class ServerConnection implements Connection {
             lastWriteTime = TimeUtil.currentTimeMillis();
             if (buffer.hasRemaining()) {
                 writeQueue.attach(buffer);
+                writeAttempts++;
                 return false;
             } else {
                 processor.getBuffers().recycle(buffer);
@@ -687,18 +699,14 @@ public final class ServerConnection implements Connection {
         }
     }
 
-    private boolean isConnectionReset(Throwable t) {
-        if (t instanceof IOException) {
-            String msg = t.getMessage();
-            return (msg != null && msg.contains("Connection reset by peer"));
-        }
-        return false;
-    }
-
     /**
      * 清理遗留资源
      */
     private void cleanup() {
+        if (user != null) {
+            SpriteServer.getInstance().getUsers().remove(user);
+        }
+
         BufferPool pool = processor.getBuffers();
         ByteBuffer buffer = null;
 
@@ -712,6 +720,49 @@ public final class ServerConnection implements Connection {
         // 回收发送缓存
         while ((buffer = writeQueue.poll()) != null) {
             pool.recycle(buffer);
+        }
+    }
+
+    private static int getServerCapabilities() {
+        int flag = 0;
+        flag |= Capabilities.CLIENT_LONG_PASSWORD;
+        flag |= Capabilities.CLIENT_FOUND_ROWS;
+        flag |= Capabilities.CLIENT_LONG_FLAG;
+        flag |= Capabilities.CLIENT_CONNECT_WITH_DB;
+        // flag |= Capabilities.CLIENT_NO_SCHEMA;
+        // flag |= Capabilities.CLIENT_COMPRESS;
+        flag |= Capabilities.CLIENT_ODBC;
+        // flag |= Capabilities.CLIENT_LOCAL_FILES;
+        flag |= Capabilities.CLIENT_IGNORE_SPACE;
+        flag |= Capabilities.CLIENT_PROTOCOL_41;
+        flag |= Capabilities.CLIENT_INTERACTIVE;
+        // flag |= Capabilities.CLIENT_SSL;
+        flag |= Capabilities.CLIENT_IGNORE_SIGPIPE;
+        flag |= Capabilities.CLIENT_TRANSACTIONS;
+        // flag |= ServerDefs.CLIENT_RESERVED;
+        flag |= Capabilities.CLIENT_SECURE_CONNECTION;
+        return flag;
+    }
+
+    private static boolean isConnectionReset(Throwable t) {
+        if (t instanceof IOException) {
+            String msg = t.getMessage();
+            return (msg != null && msg.contains("Connection reset by peer"));
+        }
+        return false;
+    }
+
+    private static byte[] encodeString(String src, String charset) {
+        if (src == null) {
+            return null;
+        }
+        if (charset == null) {
+            return src.getBytes();
+        }
+        try {
+            return src.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            return src.getBytes();
         }
     }
 

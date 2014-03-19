@@ -44,6 +44,9 @@ public final class ServerConnectionFactory implements ConnectionFactory {
         socket.setKeepAlive(true);
         ServerConnection c = new ServerConnection(channel);
         c.setId(ID_GENERATOR.newId());
+        c.setHost(socket.getInetAddress().getHostAddress());
+        c.setPort(socket.getPort());
+        c.setLocalPort(socket.getLocalPort());
         c.setPacketHeaderSize(packetHeaderSize);
         c.setMaxPacketSize(maxPacketSize);
         c.setWriteQueue(new BufferQueue(writeQueueCapcity));

@@ -81,7 +81,7 @@ RUN_CMD="\"$JAVA_HOME/bin/java\""
 RUN_CMD="$RUN_CMD -Dsprite.home=\"$SERVER_HOME\""
 RUN_CMD="$RUN_CMD -classpath \"$COBAR_CLASSPATH\""
 RUN_CMD="$RUN_CMD $JAVA_OPTS"
-RUN_CMD="$RUN_CMD com.alibaba.sprite.Sprite $@"
+RUN_CMD="$RUN_CMD com.alibaba.sprite.SpriteServer $@"
 RUN_CMD="$RUN_CMD >> \"$SERVER_HOME/logs/console.log\" 2>&1 &"
 echo $RUN_CMD
 eval $RUN_CMD

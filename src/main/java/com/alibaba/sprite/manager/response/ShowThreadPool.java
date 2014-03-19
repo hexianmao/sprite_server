@@ -19,7 +19,7 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.NameableExecutor;
 import com.alibaba.sprite.core.net.Processor;
@@ -117,7 +117,7 @@ public final class ShowThreadPool {
 
     private static List<NameableExecutor> getExecutors() {
         List<NameableExecutor> list = new LinkedList<NameableExecutor>();
-        MainServer server = MainServer.getInstance();
+        SpriteServer server = SpriteServer.getInstance();
         list.add(server.getExecutor());
         for (Processor p : server.getProcessors()) {
             list.add(p.getExecutor());

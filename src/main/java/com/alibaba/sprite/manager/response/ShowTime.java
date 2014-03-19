@@ -17,7 +17,7 @@ package com.alibaba.sprite.manager.response;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.packet.RsEOFPacket;
 import com.alibaba.sprite.core.packet.RsFieldPacket;
@@ -84,7 +84,7 @@ public final class ShowTime {
             row.add(LongUtil.toBytes(System.currentTimeMillis()));
             break;
         case ManagerParseShow.TIME_STARTUP:
-            row.add(LongUtil.toBytes(MainServer.getInstance().getStartupTime()));
+            row.add(LongUtil.toBytes(SpriteServer.getInstance().getStartupTime()));
             break;
         default:
             row.add(LongUtil.toBytes(0L));

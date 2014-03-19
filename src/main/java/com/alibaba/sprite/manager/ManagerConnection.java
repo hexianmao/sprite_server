@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.MainServer;
+import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.BufferPool;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.Capabilities;
@@ -336,7 +336,7 @@ public final class ManagerConnection implements Connection {
      * 处理数据
      */
     protected void handle(final byte[] data) {
-        MainServer.getInstance().getExecutor().execute(new Runnable() {
+        SpriteServer.getInstance().getExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -534,20 +534,6 @@ public final class ManagerConnection implements Connection {
         }
     }
 
-    private byte[] encodeString(String src, String charset) {
-        if (src == null) {
-            return null;
-        }
-        if (charset == null) {
-            return src.getBytes();
-        }
-        try {
-            return src.getBytes(charset);
-        } catch (UnsupportedEncodingException e) {
-            return src.getBytes();
-        }
-    }
-
     /**
      * 获取数据包长度
      */
@@ -574,27 +560,6 @@ public final class ManagerConnection implements Connection {
         } finally {
             lock.unlock();
         }
-    }
-
-    private int getServerCapabilities() {
-        int flag = 0;
-        flag |= Capabilities.CLIENT_LONG_PASSWORD;
-        flag |= Capabilities.CLIENT_FOUND_ROWS;
-        flag |= Capabilities.CLIENT_LONG_FLAG;
-        flag |= Capabilities.CLIENT_CONNECT_WITH_DB;
-        // flag |= Capabilities.CLIENT_NO_SCHEMA;
-        // flag |= Capabilities.CLIENT_COMPRESS;
-        flag |= Capabilities.CLIENT_ODBC;
-        // flag |= Capabilities.CLIENT_LOCAL_FILES;
-        flag |= Capabilities.CLIENT_IGNORE_SPACE;
-        flag |= Capabilities.CLIENT_PROTOCOL_41;
-        flag |= Capabilities.CLIENT_INTERACTIVE;
-        // flag |= Capabilities.CLIENT_SSL;
-        flag |= Capabilities.CLIENT_IGNORE_SIGPIPE;
-        flag |= Capabilities.CLIENT_TRANSACTIONS;
-        // flag |= ServerDefs.CLIENT_RESERVED;
-        flag |= Capabilities.CLIENT_SECURE_CONNECTION;
-        return flag;
     }
 
     private boolean write0() throws IOException {
@@ -688,14 +653,6 @@ public final class ManagerConnection implements Connection {
         }
     }
 
-    private boolean isConnectionReset(Throwable t) {
-        if (t instanceof IOException) {
-            String msg = t.getMessage();
-            return (msg != null && msg.contains("Connection reset by peer"));
-        }
-        return false;
-    }
-
     /**
      * 清理遗留资源
      */
@@ -713,6 +670,49 @@ public final class ManagerConnection implements Connection {
         // 回收发送缓存
         while ((buffer = writeQueue.poll()) != null) {
             pool.recycle(buffer);
+        }
+    }
+
+    private static int getServerCapabilities() {
+        int flag = 0;
+        flag |= Capabilities.CLIENT_LONG_PASSWORD;
+        flag |= Capabilities.CLIENT_FOUND_ROWS;
+        flag |= Capabilities.CLIENT_LONG_FLAG;
+        flag |= Capabilities.CLIENT_CONNECT_WITH_DB;
+        // flag |= Capabilities.CLIENT_NO_SCHEMA;
+        // flag |= Capabilities.CLIENT_COMPRESS;
+        flag |= Capabilities.CLIENT_ODBC;
+        // flag |= Capabilities.CLIENT_LOCAL_FILES;
+        flag |= Capabilities.CLIENT_IGNORE_SPACE;
+        flag |= Capabilities.CLIENT_PROTOCOL_41;
+        flag |= Capabilities.CLIENT_INTERACTIVE;
+        // flag |= Capabilities.CLIENT_SSL;
+        flag |= Capabilities.CLIENT_IGNORE_SIGPIPE;
+        flag |= Capabilities.CLIENT_TRANSACTIONS;
+        // flag |= ServerDefs.CLIENT_RESERVED;
+        flag |= Capabilities.CLIENT_SECURE_CONNECTION;
+        return flag;
+    }
+
+    private static boolean isConnectionReset(Throwable t) {
+        if (t instanceof IOException) {
+            String msg = t.getMessage();
+            return (msg != null && msg.contains("Connection reset by peer"));
+        }
+        return false;
+    }
+
+    private static byte[] encodeString(String src, String charset) {
+        if (src == null) {
+            return null;
+        }
+        if (charset == null) {
+            return src.getBytes();
+        }
+        try {
+            return src.getBytes(charset);
+        } catch (UnsupportedEncodingException e) {
+            return src.getBytes();
         }
     }
 

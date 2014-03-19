@@ -26,11 +26,11 @@
     </layout>
   </appender>
 
-  <logger name="com.alibaba.sprite.MainServer">
+  <logger name="com.alibaba.sprite.SpriteServer">
     <level value="info" />
   </logger>
 
-  <logger name="com.alibaba.sprite.manager.ManagerQueryHandler">
+  <logger name="com.alibaba.sprite.manager.handler.QueryHandler">
     <level value="debug" />
   </logger>
 
