@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.manager;
+package com.alibaba.sprite.manager.handler;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
@@ -22,24 +22,23 @@ import org.apache.log4j.Logger;
 
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.net.Handler;
 import com.alibaba.sprite.core.packet.AuthPacket;
 import com.alibaba.sprite.core.packet.QuitPacket;
 import com.alibaba.sprite.core.util.SecurityUtil;
-import com.alibaba.sprite.manager.handler.CommandHandler;
-import com.alibaba.sprite.server.ServerAuthenticator;
+import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.ManagerHandler;
 
 /**
  * @author xianmao.hexm
  */
-public final class ManagerAuthenticator implements Handler {
+public final class AuthHandler implements ManagerHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(ServerAuthenticator.class);
+    private static final Logger LOGGER = Logger.getLogger(AuthHandler.class);
     private static final byte[] AUTH_OK = new byte[] { 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 };
 
     protected final ManagerConnection source;
 
-    public ManagerAuthenticator(ManagerConnection source) {
+    public AuthHandler(ManagerConnection source) {
         this.source = source;
     }
 
@@ -111,14 +110,14 @@ public final class ManagerAuthenticator implements Handler {
             }
             LOGGER.info(s.toString());
         }
-        ByteBuffer buffer = source.allocate();
+        ByteBuffer buffer = source.allocateBuffer();
         source.postWrite(source.writeToBuffer(AUTH_OK, buffer));
     }
 
     protected void failure(int errno, String info) {
         LOGGER.error(source.toString() + info);
         source.writeErrMessage((byte) 2, errno, info);
-        source.close();
+        source.postClose();
     }
 
 }

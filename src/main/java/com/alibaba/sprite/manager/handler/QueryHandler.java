@@ -39,7 +39,7 @@ public class QueryHandler {
             SelectHandler.handle(query, c, rs >>> 8);
             break;
         case ManagerParser.SET:
-            c.postWrite(c.writeToBuffer(OkPacket.OK, c.allocate()));
+            c.postWrite(c.writeToBuffer(OkPacket.OK, c.allocateBuffer()));
             break;
         case ManagerParser.SHOW:
             ShowHandler.handle(query, c, rs >>> 8);

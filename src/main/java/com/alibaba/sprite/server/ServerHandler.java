@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core.net;
+package com.alibaba.sprite.server;
 
 /**
  * @author xianmao.hexm
  */
-public interface Handler {
+public interface ServerHandler {
 
     void handle(byte[] data);
 

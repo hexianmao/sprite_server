@@ -24,10 +24,6 @@ public class SystemTimer {
         // timer.schedule(clusterHeartbeat(config), 0L, sc.getClusterHeartbeatPeriod());
     }
 
-    public void scheldule(TimerTask task, long delay, long period) {
-        timer.schedule(task, delay, period);
-    }
-
     // 系统时间定时更新任务
     private TimerTask updateTime() {
         return new TimerTask() {

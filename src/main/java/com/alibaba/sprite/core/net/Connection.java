@@ -38,13 +38,11 @@ public interface Connection {
 
     void error(int errCode, Throwable t);
 
-    boolean close();
-
-    ByteBuffer allocate();
-
-    void postWrite(ByteBuffer buffer);
+    ByteBuffer allocateBuffer();
 
     ByteBuffer evaluateBuffer(ByteBuffer buffer, int capacity);
+
+    void postWrite(ByteBuffer buffer);
 
     ByteBuffer writeToBuffer(byte[] src, ByteBuffer buffer);
 

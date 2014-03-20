@@ -22,6 +22,7 @@ import java.nio.channels.SocketChannel;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.net.ConnectionFactory;
+import com.alibaba.sprite.manager.handler.AuthHandler;
 
 /**
  * @author xianmao.hexm
@@ -52,7 +53,7 @@ public final class ManagerConnectionFactory implements ConnectionFactory {
         c.setWriteQueue(new BufferQueue(writeQueueCapcity));
         c.setIdleTimeout(idleTimeout);
         c.setCharset(charset);
-        c.setHandler(new ManagerAuthenticator(c));
+        c.setHandler(new AuthHandler(c));
         return c;
     }
 

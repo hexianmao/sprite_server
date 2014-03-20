@@ -13,35 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.server;
+package com.alibaba.sprite.server.handler;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.net.Handler;
 import com.alibaba.sprite.core.packet.AuthPacket;
 import com.alibaba.sprite.core.packet.QuitPacket;
 import com.alibaba.sprite.core.util.SecurityUtil;
-import com.alibaba.sprite.server.handler.CommandHandler;
+import com.alibaba.sprite.server.ServerConnection;
+import com.alibaba.sprite.server.ServerHandler;
 
 /**
  * @author xianmao.hexm
  */
-public final class ServerAuthenticator implements Handler {
+public final class AuthHandler implements ServerHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(ServerAuthenticator.class);
+    private static final Logger LOGGER = Logger.getLogger(AuthHandler.class);
     private static final byte[] AUTH_OK = new byte[] { 7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0 };
     private static final String SECURITY_KEY = "&(~ER#*&^gy9JK";
 
     protected final ServerConnection source;
 
-    public ServerAuthenticator(ServerConnection source) {
+    public AuthHandler(ServerConnection source) {
         this.source = source;
     }
 
@@ -56,9 +54,7 @@ public final class ServerAuthenticator implements Handler {
         // check auth packet
         AuthPacket packet = new AuthPacket();
         packet.read(data);
-        ConcurrentMap<String, ServerConnection> users = SpriteServer.getInstance().getUsers();
-        if (check(packet) && !users.containsKey(packet.user)) {
-            users.put(packet.user, source);
+        if (check(packet)) {
             success(packet);
         } else {
             failure(ErrorCode.ER_ACCESS_DENIED_ERROR, "Access denied for user '" + packet.user + "'");
@@ -66,12 +62,6 @@ public final class ServerAuthenticator implements Handler {
     }
 
     protected boolean check(AuthPacket packet) {
-        // check user
-        String user = packet.user;
-        if (user == null || user.length() == 0 || SpriteServer.getInstance().getUsers().containsKey(packet.user)) {
-            return false;
-        }
-
         // check password
         byte[] clientPass = packet.password;
         String passSource = SECURITY_KEY;
@@ -123,14 +113,16 @@ public final class ServerAuthenticator implements Handler {
             }
             LOGGER.info(s.toString());
         }
-        ByteBuffer buffer = source.allocate();
+
+        // 通知客户端认证成功
+        ByteBuffer buffer = source.allocateBuffer();
         source.postWrite(source.writeToBuffer(AUTH_OK, buffer));
     }
 
     protected void failure(int errno, String info) {
         LOGGER.error(source.toString() + info);
         source.writeErrMessage((byte) 2, errno, info);
-        source.close();
+        source.postClose();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 1999-2014 Alibaba Group.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core.packet;
+package com.alibaba.sprite.server.packet;
 
+import com.alibaba.sprite.core.Message;
 import com.alibaba.sprite.core.Packet;
-import com.alibaba.sprite.core.PacketTypes;
 
 /**
  * @author xianmao.hexm
  */
-public class QuitPacket extends Packet {
+public class CallPacket extends Packet {
 
-    public static final byte[] QUIT = new byte[] { 1, 0, 0, 0, PacketTypes.COM_QUIT };
+    public String value;
+
+    public void read(byte[] data) {
+        Message mm = new Message(data);
+        packetLength = mm.readUB3();
+        packetId = mm.read();
+        mm.read();//move command flag
+        value = mm.readStringWithNull();
+    }
 
     @Override
     public int calcPacketSize() {
-        return 1;
+        return 1 + ((value == null) ? 1 : value.length() + 1);
     }
 
     @Override
     protected String getPacketInfo() {
-        return "Quit Packet";
+        return "Call Packet";
     }
 
 }

@@ -20,17 +20,20 @@ package com.alibaba.sprite;
  */
 public class SystemConfig {
 
+    private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
     private static final int MANAGER_DEFAULT_PORT = 9999;
     private static final int SERVER_DEFAULT_PORT = 8888;
-    private static final int SERVER_DEFAULT_EXECUTOR = 8;
-    private static final int PROCESSOR_DEFAULT_COUNT = 4;
-    private static final int PROCESSOR_DEFAULT_EXECUTOR = 4;
+    private static final int SERVER_DEFAULT_SERVER_EXECUTOR = 4 * PROCESSORS;
+    private static final int SERVER_DEFAULT_TASK_EXECUTOR = PROCESSORS;
+    private static final int PROCESSOR_DEFAULT_COUNT = PROCESSORS;
+    private static final int PROCESSOR_DEFAULT_EXECUTOR = 2 * PROCESSORS;
     private static final int PROCESSOR_DEFAULT_BUFFER_SIZE = 32 * 1024 * 1024;
     private static final int PROCESSOR_DEFAULT_CHUNK_SIZE = 4096;
 
     private int serverPort;
     private int managerPort;
     private int serverExecutor;
+    private int taskExecutor;
     private int processorCount;
     private int processorExecutor;
     private int processorBufferSize;
@@ -58,6 +61,14 @@ public class SystemConfig {
 
     public void setServerExecutor(int serverExecutor) {
         this.serverExecutor = serverExecutor;
+    }
+
+    public int getTaskExecutor() {
+        return taskExecutor;
+    }
+
+    public void setTaskExecutor(int taskExecutor) {
+        this.taskExecutor = taskExecutor;
     }
 
     public int getProcessorCount() {
@@ -96,7 +107,8 @@ public class SystemConfig {
         SystemConfig config = new SystemConfig();
         config.setManagerPort(MANAGER_DEFAULT_PORT);
         config.setServerPort(SERVER_DEFAULT_PORT);
-        config.setServerExecutor(SERVER_DEFAULT_EXECUTOR);
+        config.setServerExecutor(SERVER_DEFAULT_SERVER_EXECUTOR);
+        config.setTaskExecutor(SERVER_DEFAULT_TASK_EXECUTOR);
         config.setProcessorCount(PROCESSOR_DEFAULT_COUNT);
         config.setProcessorExecutor(PROCESSOR_DEFAULT_EXECUTOR);
         config.setProcessorBufferSize(PROCESSOR_DEFAULT_BUFFER_SIZE);

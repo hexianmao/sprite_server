@@ -20,16 +20,16 @@ import java.nio.ByteBuffer;
 import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.Fields;
-import com.alibaba.sprite.core.packet.RsEOFPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
-import com.alibaba.sprite.core.packet.RsRowDataPacket;
 import com.alibaba.sprite.core.util.IntegerUtil;
 import com.alibaba.sprite.core.util.LongUtil;
 import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.core.util.StringUtil;
 import com.alibaba.sprite.core.util.TimeUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.RsEOFPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsRowDataPacket;
 import com.alibaba.sprite.server.ServerConnection;
 
 /**
@@ -86,7 +86,7 @@ public final class ShowConnection {
     }
 
     public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
+        ByteBuffer buffer = c.allocateBuffer();
 
         // write header
         buffer = header.write(buffer, c);
@@ -102,9 +102,9 @@ public final class ShowConnection {
         // write rows
         byte packetId = eof.packetId;
         String charset = c.getCharset();
-        for (ServerConnection sc : SpriteServer.getInstance().getUsers().values()) {
-            if (sc != null) {
-                RsRowDataPacket row = getRow(sc, charset);
+        for (ServerConnection e : SpriteServer.getInstance().getConnections().values()) {
+            if (e != null) {
+                RsRowDataPacket row = getRow(e, charset);
                 row.packetId = ++packetId;
                 buffer = row.write(buffer, c);
             }

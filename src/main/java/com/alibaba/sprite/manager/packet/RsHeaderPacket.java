@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core.packet;
+package com.alibaba.sprite.manager.packet;
 
 import java.nio.ByteBuffer;
 
 import com.alibaba.sprite.core.Message;
+import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.util.BufferUtil;
 
@@ -44,7 +45,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-22 下午05:59:55
  */
-public class RsHeaderPacket extends AbstractPacket {
+public class RsHeaderPacket extends Packet {
 
     public int fieldCount;
     public long extra;

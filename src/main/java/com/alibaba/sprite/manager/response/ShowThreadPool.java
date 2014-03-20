@@ -23,15 +23,15 @@ import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.NameableExecutor;
 import com.alibaba.sprite.core.net.Processor;
-import com.alibaba.sprite.core.packet.RsEOFPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
-import com.alibaba.sprite.core.packet.RsRowDataPacket;
 import com.alibaba.sprite.core.util.IntegerUtil;
 import com.alibaba.sprite.core.util.LongUtil;
 import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.core.util.StringUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.RsEOFPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsRowDataPacket;
 
 /**
  * 查看线程池状态
@@ -71,7 +71,7 @@ public final class ShowThreadPool {
     }
 
     public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
+        ByteBuffer buffer = c.allocateBuffer();
 
         // write header
         buffer = header.write(buffer, c);
@@ -116,9 +116,10 @@ public final class ShowThreadPool {
     }
 
     private static List<NameableExecutor> getExecutors() {
-        List<NameableExecutor> list = new LinkedList<NameableExecutor>();
         SpriteServer server = SpriteServer.getInstance();
-        list.add(server.getExecutor());
+        List<NameableExecutor> list = new LinkedList<NameableExecutor>();
+        list.add(server.getServerExecutor());
+        list.add(server.getTaskExecutor());
         for (Processor p : server.getProcessors()) {
             list.add(p.getExecutor());
         }

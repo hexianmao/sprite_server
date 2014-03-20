@@ -20,13 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.alibaba.sprite.core.Fields;
-import com.alibaba.sprite.core.packet.RsEOFPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
-import com.alibaba.sprite.core.packet.RsRowDataPacket;
 import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.core.util.StringUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.RsEOFPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsRowDataPacket;
 
 /**
  * @author wenfeng.cenwf 2011-4-25
@@ -52,7 +52,7 @@ public final class ShowVariables {
     }
 
     public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
+        ByteBuffer buffer = c.allocateBuffer();
 
         // write header
         buffer = header.write(buffer, c);

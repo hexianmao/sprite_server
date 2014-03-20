@@ -18,12 +18,12 @@ package com.alibaba.sprite.manager.response;
 import java.nio.ByteBuffer;
 
 import com.alibaba.sprite.core.Fields;
-import com.alibaba.sprite.core.packet.RsEOFPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
-import com.alibaba.sprite.core.packet.RsRowDataPacket;
 import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.RsEOFPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsRowDataPacket;
 
 /**
  * @author xianmao.hexm 2011-5-7 下午01:00:33
@@ -47,7 +47,7 @@ public final class SelectVersionComment {
     }
 
     public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
+        ByteBuffer buffer = c.allocateBuffer();
 
         // write header
         buffer = header.write(buffer, c);

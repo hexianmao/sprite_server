@@ -20,14 +20,14 @@ import java.nio.ByteBuffer;
 import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.Fields;
 import com.alibaba.sprite.core.net.Processor;
-import com.alibaba.sprite.core.packet.RsEOFPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
-import com.alibaba.sprite.core.packet.RsRowDataPacket;
 import com.alibaba.sprite.core.util.IntegerUtil;
 import com.alibaba.sprite.core.util.LongUtil;
 import com.alibaba.sprite.core.util.PacketUtil;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.RsEOFPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsRowDataPacket;
 
 /**
  * 查看处理器状态
@@ -74,7 +74,7 @@ public final class ShowProcessor {
     }
 
     public static void execute(ManagerConnection c) {
-        ByteBuffer buffer = c.allocate();
+        ByteBuffer buffer = c.allocateBuffer();
 
         // write header
         buffer = header.write(buffer, c);

@@ -36,7 +36,6 @@ import com.alibaba.sprite.core.Capabilities;
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.Versions;
 import com.alibaba.sprite.core.net.Connection;
-import com.alibaba.sprite.core.net.Handler;
 import com.alibaba.sprite.core.net.Processor;
 import com.alibaba.sprite.core.packet.ErrorPacket;
 import com.alibaba.sprite.core.packet.HandshakePacket;
@@ -79,7 +78,7 @@ public final class ManagerConnection implements Connection {
     private long lastWriteTime;
     private long netInBytes;
     private long netOutBytes;
-    private Handler handler;
+    private ManagerHandler handler;
 
     public ManagerConnection(SocketChannel channel) {
         this.channel = channel;
@@ -161,21 +160,21 @@ public final class ManagerConnection implements Connection {
         this.isAuthenticated = isAuthenticated;
     }
 
-    public void setHandler(Handler handler) {
+    public void setHandler(ManagerHandler handler) {
         this.handler = handler;
     }
 
     /**
      * 分配缓存
      */
-    public ByteBuffer allocate() {
+    public ByteBuffer allocateBuffer() {
         return processor.getBuffers().allocate();
     }
 
     /**
      * 回收缓存
      */
-    public void recycle(ByteBuffer buffer) {
+    public void recycleBuffer(ByteBuffer buffer) {
         processor.getBuffers().recycle(buffer);
     }
 
@@ -333,22 +332,6 @@ public final class ManagerConnection implements Connection {
     }
 
     /**
-     * 处理数据
-     */
-    protected void handle(final byte[] data) {
-        SpriteServer.getInstance().getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    handler.handle(data);
-                } catch (Throwable t) {
-                    error(ErrorCode.ERR_HANDLE_DATA, t);
-                }
-            }
-        });
-    }
-
-    /**
      * 发生错误
      */
     public void error(int errCode, Throwable t) {
@@ -394,6 +377,13 @@ public final class ManagerConnection implements Connection {
                 return false;
             }
         }
+    }
+
+    /**
+     * 通过提交一块空buffer，来触发关闭。在需要把writeQueue里的数据都写出去后才能关闭的场景下使用。
+     */
+    public void postClose() {
+        postWrite(processor.getBuffers().allocate());
     }
 
     /**
@@ -532,6 +522,22 @@ public final class ManagerConnection implements Connection {
         } finally {
             lock.unlock();
         }
+    }
+
+    /**
+     * 处理数据
+     */
+    private void handle(final byte[] data) {
+        SpriteServer.getInstance().getServerExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    handler.handle(data);
+                } catch (Throwable t) {
+                    error(ErrorCode.ERR_HANDLE_DATA, t);
+                }
+            }
+        });
     }
 
     /**

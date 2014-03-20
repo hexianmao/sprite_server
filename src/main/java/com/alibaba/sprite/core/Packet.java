@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core.packet;
+package com.alibaba.sprite.core;
 
 /**
  * @author xianmao.hexm
  */
-public abstract class AbstractPacket {
+public abstract class Packet {
 
     public int packetLength;
     public byte packetId;

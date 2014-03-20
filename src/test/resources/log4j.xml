@@ -32,6 +32,10 @@
     <level value="debug" />
   </logger>
 
+  <logger name="com.alibaba.sprite.server.handler.CommandHandler">
+    <level value="debug" />
+  </logger>
+
   <root>
     <level value="warn" />
     <appender-ref ref="STDOUT" />

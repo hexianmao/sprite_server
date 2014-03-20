@@ -15,22 +15,24 @@
  */
 package com.alibaba.sprite.core.packet;
 
+import com.alibaba.sprite.core.Packet;
+import com.alibaba.sprite.core.PacketTypes;
+
 /**
  * @author xianmao.hexm
  */
-public class CommandPacket extends AbstractPacket {
+public class PingPacket extends Packet {
 
-    public byte command;
+    public static final byte[] PING = new byte[] { 1, 0, 0, 0, PacketTypes.COM_PING };
 
     @Override
     public int calcPacketSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 1;
     }
 
     @Override
     protected String getPacketInfo() {
-        return "Command Packet";
+        return "Ping Packet";
     }
 
 }

@@ -19,8 +19,8 @@ import java.io.UnsupportedEncodingException;
 
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.packet.ErrorPacket;
-import com.alibaba.sprite.core.packet.RsFieldPacket;
-import com.alibaba.sprite.core.packet.RsHeaderPacket;
+import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.packet.RsHeaderPacket;
 
 /**
  * @author xianmao.hexm

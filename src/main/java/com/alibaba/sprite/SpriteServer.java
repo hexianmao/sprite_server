@@ -35,24 +35,29 @@ public class SpriteServer {
     private Acceptor managerAcceptor;
     private Acceptor serverAcceptor;
     private Processor[] processors;
-    private NameableExecutor executor;
+    private NameableExecutor serverExecutor;
+    private NameableExecutor taskExecutor;
     private long startupTime;
-    private ConcurrentMap<String, ServerConnection> users;
+    private ConcurrentMap<Long, ServerConnection> connections;
 
     public static final SpriteServer getInstance() {
         return INSTANCE;
     }
 
-    public NameableExecutor getExecutor() {
-        return executor;
+    public NameableExecutor getServerExecutor() {
+        return serverExecutor;
+    }
+
+    public NameableExecutor getTaskExecutor() {
+        return taskExecutor;
     }
 
     public Processor[] getProcessors() {
         return processors;
     }
 
-    public ConcurrentMap<String, ServerConnection> getUsers() {
-        return users;
+    public ConcurrentMap<Long, ServerConnection> getConnections() {
+        return connections;
     }
 
     public long getStartupTime() {
@@ -62,8 +67,9 @@ public class SpriteServer {
     private SpriteServer() {
         this.config = SystemConfig.getDefault();
         this.serverTimer = new SystemTimer();
-        this.executor = ExecutorUtil.create("Server-Executor", config.getServerExecutor());
-        this.users = new ConcurrentHashMap<String, ServerConnection>();
+        this.serverExecutor = ExecutorUtil.create("Server-Executor", config.getServerExecutor());
+        this.taskExecutor = ExecutorUtil.create("Task-Executor", config.getServerExecutor());
+        this.connections = new ConcurrentHashMap<Long, ServerConnection>();
         this.startupTime = TimeUtil.currentTimeMillis();
     }
 

@@ -21,14 +21,14 @@ import java.nio.ByteBuffer;
 import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.Message;
 import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.net.Handler;
 import com.alibaba.sprite.core.packet.OkPacket;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.ManagerHandler;
 
 /**
  * @author xianmao.hexm
  */
-public final class CommandHandler implements Handler {
+public final class CommandHandler implements ManagerHandler {
 
     protected final ManagerConnection source;
 
@@ -41,7 +41,7 @@ public final class CommandHandler implements Handler {
         switch (data[4]) {
         case PacketTypes.COM_INIT_DB:
         case PacketTypes.COM_PING: {
-            ByteBuffer buffer = source.allocate();
+            ByteBuffer buffer = source.allocateBuffer();
             buffer = source.writeToBuffer(OkPacket.OK, buffer);
             source.postWrite(buffer);
             break;
@@ -71,7 +71,7 @@ public final class CommandHandler implements Handler {
             source.close();
             break;
         default:
-            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "unknown command error");
+            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "unknown command");
         }
     }
 

@@ -14,14 +14,14 @@ import com.alibaba.sprite.core.BufferPool;
 /**
  * @author xianmao.hexm
  */
-public class UdpServer {
+public class UDPServer {
 
     private final String name;
     private final BufferPool buffers;
     private final DatagramChannel channel;
     private final Selector selector;
 
-    public UdpServer(String name, int buffer, int chunk) throws IOException {
+    public UDPServer(String name, int buffer, int chunk) throws IOException {
         this.name = name;
         this.buffers = new BufferPool(buffer, chunk);
         this.channel = DatagramChannel.open();
