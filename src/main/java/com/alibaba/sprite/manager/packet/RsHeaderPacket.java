@@ -17,9 +17,9 @@ package com.alibaba.sprite.manager.packet;
 
 import java.nio.ByteBuffer;
 
+import com.alibaba.sprite.core.AbstractPacket;
 import com.alibaba.sprite.core.Message;
 import com.alibaba.sprite.core.net.Connection;
-import com.alibaba.sprite.core.packet.AbstractPacket;
 import com.alibaba.sprite.core.util.BufferUtil;
 
 /**
@@ -61,7 +61,7 @@ public class RsHeaderPacket extends AbstractPacket {
     }
 
     public ByteBuffer write(ByteBuffer buffer, Connection c) {
-        int size = calcPacketSize();
+        int size = packetSize();
         buffer = c.evaluateBuffer(buffer, c.getPacketHeaderSize() + size);
         BufferUtil.writeUB3(buffer, size);
         buffer.put(packetId);
@@ -73,17 +73,12 @@ public class RsHeaderPacket extends AbstractPacket {
     }
 
     @Override
-    public int calcPacketSize() {
+    public int packetSize() {
         int size = BufferUtil.getLength(fieldCount);
         if (extra > 0) {
             size += BufferUtil.getLength(extra);
         }
         return size;
-    }
-
-    @Override
-    protected String getPacketInfo() {
-        return "ResultSetHeader Packet";
     }
 
 }

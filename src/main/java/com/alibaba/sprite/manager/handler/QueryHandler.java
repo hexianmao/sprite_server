@@ -17,9 +17,9 @@ package com.alibaba.sprite.manager.handler;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.core.ErrorCode;
-import com.alibaba.sprite.core.packet.OkPacket;
+import com.alibaba.sprite.manager.ErrorCode;
 import com.alibaba.sprite.manager.ManagerConnection;
+import com.alibaba.sprite.manager.packet.OkPacket;
 import com.alibaba.sprite.manager.parser.ManagerParser;
 
 /**
@@ -44,14 +44,8 @@ public class QueryHandler {
         case ManagerParser.SHOW:
             ShowHandler.handle(query, c, rs >>> 8);
             break;
-        case ManagerParser.RELOAD:
-            ReloadHandler.handle(query, c, rs >>> 8);
-            break;
-        case ManagerParser.ROLLBACK:
-            RollbackHandler.handle(query, c, rs >>> 8);
-            break;
         default:
-            c.writeErrMessage((byte) 1, ErrorCode.ER_YES, "Unsupported statement");
+            c.writeErrMessage((byte) 1, ErrorCode.ER_YES, "unsupported statement");
         }
     }
 

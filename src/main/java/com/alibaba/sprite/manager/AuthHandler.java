@@ -20,11 +20,10 @@ import java.security.NoSuchAlgorithmException;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.core.ErrorCode;
-import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.packet.AuthPacket;
-import com.alibaba.sprite.core.packet.QuitPacket;
 import com.alibaba.sprite.core.util.SecurityUtil;
+import com.alibaba.sprite.manager.packet.AuthPacket;
+import com.alibaba.sprite.manager.packet.Packets;
+import com.alibaba.sprite.manager.packet.QuitPacket;
 
 /**
  * @author xianmao.hexm
@@ -43,7 +42,7 @@ public final class AuthHandler implements ManagerHandler {
     @Override
     public void handle(byte[] data) {
         // check quit packet
-        if (data.length == QuitPacket.QUIT.length && data[4] == PacketTypes.COM_QUIT) {
+        if (data.length == QuitPacket.QUIT.length && data[4] == Packets.COM_QUIT) {
             source.close();
             return;
         }

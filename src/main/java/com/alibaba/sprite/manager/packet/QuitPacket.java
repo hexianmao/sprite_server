@@ -13,17 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core;
+package com.alibaba.sprite.manager.packet;
+
+import com.alibaba.sprite.core.AbstractPacket;
 
 /**
  * @author xianmao.hexm
  */
-public interface Versions {
+public class QuitPacket extends AbstractPacket {
 
-    /** 协议版本 */
-    byte PROTOCOL_VERSION = 10;
+    public static final byte[] QUIT = new byte[] { 1, 0, 0, 0, Packets.COM_QUIT };
 
-    /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.48".getBytes();
+    @Override
+    public int packetSize() {
+        return 1;
+    }
 
 }

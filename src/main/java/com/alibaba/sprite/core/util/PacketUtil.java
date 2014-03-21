@@ -17,9 +17,9 @@ package com.alibaba.sprite.core.util;
 
 import java.io.UnsupportedEncodingException;
 
-import com.alibaba.sprite.core.ErrorCode;
-import com.alibaba.sprite.core.packet.ErrorPacket;
-import com.alibaba.sprite.manager.packet.RsFieldPacket;
+import com.alibaba.sprite.manager.ErrorCode;
+import com.alibaba.sprite.manager.packet.ErrorPacket;
+import com.alibaba.sprite.manager.packet.FieldPacket;
 import com.alibaba.sprite.manager.packet.RsHeaderPacket;
 
 /**
@@ -46,8 +46,8 @@ public class PacketUtil {
         }
     }
 
-    public static final RsFieldPacket getField(String name, String orgName, int type) {
-        RsFieldPacket packet = new RsFieldPacket();
+    public static final FieldPacket getField(String name, String orgName, int type) {
+        FieldPacket packet = new FieldPacket();
         packet.charsetIndex = CharsetUtil.getIndex(CODE_PAGE_1252);
         packet.name = encode(name, CODE_PAGE_1252);
         packet.orgName = encode(orgName, CODE_PAGE_1252);
@@ -55,8 +55,8 @@ public class PacketUtil {
         return packet;
     }
 
-    public static final RsFieldPacket getField(String name, int type) {
-        RsFieldPacket packet = new RsFieldPacket();
+    public static final FieldPacket getField(String name, int type) {
+        FieldPacket packet = new FieldPacket();
         packet.charsetIndex = CharsetUtil.getIndex(CODE_PAGE_1252);
         packet.name = encode(name, CODE_PAGE_1252);
         packet.type = (byte) type;

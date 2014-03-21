@@ -15,17 +15,15 @@
  */
 package com.alibaba.sprite.server;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.core.ErrorCode;
-import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.packet.OkPacket;
+import com.alibaba.sprite.manager.ErrorCode;
 import com.alibaba.sprite.server.handler.CallHandler;
 import com.alibaba.sprite.server.handler.EchoHandler;
-import com.alibaba.sprite.server.packet.CallRequestPacket;
+import com.alibaba.sprite.server.packet.CallPacket;
+import com.alibaba.sprite.server.packet.Packets;
 
 /**
  * @author xianmao.hexm
@@ -46,33 +44,22 @@ public final class CommandHandler implements ServerHandler {
             LOGGER.debug(new StringBuilder().append(source).append(Arrays.toString(data)).toString());
         }
         switch (data[4]) {
-        case PacketTypes.COM_INIT_DB:
-        case PacketTypes.COM_QUERY: {
-            ByteBuffer buffer = source.allocateBuffer();
-            buffer = source.writeToBuffer(OkPacket.OK, buffer);
-            source.postWrite(buffer);
+        case Packets.COM_PING:
             break;
-        }
-        case PacketTypes.COM_PING: {
-            break;
-        }
-        case PacketTypes.COM_ECHO: {
+        case Packets.COM_ECHO:
             EchoHandler.handle(data, source);
             break;
-        }
-        case PacketTypes.COM_CALL: {
-            CallRequestPacket packet = new CallRequestPacket();
+        case Packets.COM_CALL: {
+            CallPacket packet = new CallPacket();
             packet.read(data);
             CallHandler.handle(packet, source);
             break;
         }
-        case PacketTypes.COM_QUIT:
-        case PacketTypes.COM_PROCESS_KILL: {
+        case Packets.COM_QUIT:
             source.close();
             break;
-        }
         default:
-            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "unknown command");
+            source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "command error");
         }
     }
 

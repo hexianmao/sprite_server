@@ -18,8 +18,9 @@ package com.alibaba.sprite.server.handler;
 import org.apache.log4j.Logger;
 
 import com.alibaba.sprite.SpriteServer;
+import com.alibaba.sprite.server.ErrorCode;
 import com.alibaba.sprite.server.ServerConnection;
-import com.alibaba.sprite.server.packet.CallRequestPacket;
+import com.alibaba.sprite.server.packet.CallPacket;
 
 /**
  * @author xianmao.hexm
@@ -28,15 +29,21 @@ public class CallHandler {
 
     private static final Logger LOGGER = Logger.getLogger(CallHandler.class);
 
-    public static void handle(CallRequestPacket packet, ServerConnection source) {
+    public static void handle(CallPacket packet, ServerConnection source) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("<" + source.getUser() + "> calling <" + packet.value + ">");
+            LOGGER.debug("<" + source.getUser() + "> calling <" + packet.user + ">");
         }
-        ServerConnection target = SpriteServer.getInstance().getConnections().get(packet.value);
-        if (target == null) {
-
+        String cid = SpriteServer.getInstance().getUsers().get(packet.user);
+        if (cid == null) {
+            source.writeErrMessage((byte) 1, ErrorCode.ER_USER_NOT_EXIST, "user not exist");
         } else {
-
+            ServerConnection target = SpriteServer.getInstance().getConnections().get(cid);
+            if (target == null) {
+                source.writeErrMessage((byte) 1, ErrorCode.ER_USER_NOT_ONLINE, "user not online");
+            } else {
+                packet.user = source.getUser();
+                packet.write(target);
+            }
         }
     }
 

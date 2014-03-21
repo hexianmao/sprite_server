@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import com.alibaba.sprite.core.ErrorCode;
+import com.alibaba.sprite.manager.ErrorCode;
 
 /**
  * @author xianmao.hexm

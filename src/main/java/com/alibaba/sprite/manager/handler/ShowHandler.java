@@ -15,21 +15,9 @@
  */
 package com.alibaba.sprite.manager.handler;
 
-import com.alibaba.sprite.core.ErrorCode;
+import com.alibaba.sprite.manager.ErrorCode;
 import com.alibaba.sprite.manager.ManagerConnection;
 import com.alibaba.sprite.manager.parser.ManagerParseShow;
-import com.alibaba.sprite.manager.response.ShowCollation;
-import com.alibaba.sprite.manager.response.ShowCommand;
-import com.alibaba.sprite.manager.response.ShowConnection;
-import com.alibaba.sprite.manager.response.ShowHelp;
-import com.alibaba.sprite.manager.response.ShowParser;
-import com.alibaba.sprite.manager.response.ShowProcessor;
-import com.alibaba.sprite.manager.response.ShowRouter;
-import com.alibaba.sprite.manager.response.ShowServer;
-import com.alibaba.sprite.manager.response.ShowThreadPool;
-import com.alibaba.sprite.manager.response.ShowTime;
-import com.alibaba.sprite.manager.response.ShowVariables;
-import com.alibaba.sprite.manager.response.ShowVersion;
 
 /**
  * @author xianmao.hexm

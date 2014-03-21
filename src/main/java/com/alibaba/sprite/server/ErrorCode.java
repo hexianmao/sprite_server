@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 1999-2014 Alibaba Group.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core;
+package com.alibaba.sprite.server;
 
 /**
  * @author xianmao.hexm
  */
-public interface Versions {
+public class ErrorCode {
 
-    /** 协议版本 */
-    byte PROTOCOL_VERSION = 10;
+    public static final int ER_USER_NOT_ONLINE = 1000;
 
-    /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.48".getBytes();
+    public static final int ER_USER_NOT_EXIST = 1001;
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2012 Alibaba Group.
+ * Copyright 1999-2014 Alibaba Group.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.core;
+package com.alibaba.sprite.server.packet;
 
 /**
  * @author xianmao.hexm
  */
-public interface Versions {
+public class Packets {
 
-    /** 协议版本 */
-    byte PROTOCOL_VERSION = 10;
+    public static final byte COM_ERR = -1;
 
-    /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.48".getBytes();
+    public static final byte COM_OK = 0;
+
+    public static final byte COM_ECHO = 1;
+
+    public static final byte COM_PING = 2;
+
+    public static final byte COM_QUIT = 3;
+
+    public static final byte COM_CALL = 5;
+
+    public static final byte COM_ANSWER = 6;
 
 }

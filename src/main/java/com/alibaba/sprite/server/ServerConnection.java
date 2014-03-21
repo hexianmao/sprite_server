@@ -33,15 +33,15 @@ import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.BufferPool;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.Capabilities;
-import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.Versions;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.net.Processor;
-import com.alibaba.sprite.core.packet.ErrorPacket;
-import com.alibaba.sprite.core.packet.HandshakePacket;
 import com.alibaba.sprite.core.util.CharsetUtil;
 import com.alibaba.sprite.core.util.RandomUtil;
 import com.alibaba.sprite.core.util.TimeUtil;
+import com.alibaba.sprite.manager.ErrorCode;
+import com.alibaba.sprite.manager.packet.ErrorPacket;
+import com.alibaba.sprite.manager.packet.HandshakePacket;
 
 /**
  * @author xianmao.hexm

@@ -18,12 +18,24 @@ package com.alibaba.sprite.core;
 /**
  * @author xianmao.hexm
  */
-public interface Versions {
+public abstract class AbstractPacket {
 
-    /** 协议版本 */
-    byte PROTOCOL_VERSION = 10;
+    public int packetLength;
+    public byte packetId;
 
-    /** 服务器版本 */
-    byte[] SERVER_VERSION = "5.1.48".getBytes();
+    /**
+     * 计算数据包大小，不包含包头长度。
+     */
+    public abstract int packetSize();
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append("{length=")
+                                  .append(packetLength)
+                                  .append(",packetId=")
+                                  .append(packetId)
+                                  .append('}')
+                                  .toString();
+    }
 
 }

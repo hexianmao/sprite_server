@@ -18,11 +18,10 @@ package com.alibaba.sprite.manager;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.core.ErrorCode;
 import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.PacketTypes;
-import com.alibaba.sprite.core.packet.OkPacket;
 import com.alibaba.sprite.manager.handler.QueryHandler;
+import com.alibaba.sprite.manager.packet.OkPacket;
+import com.alibaba.sprite.manager.packet.Packets;
 
 /**
  * @author xianmao.hexm
@@ -38,14 +37,14 @@ public final class CommandHandler implements ManagerHandler {
     @Override
     public void handle(byte[] data) {
         switch (data[4]) {
-        case PacketTypes.COM_INIT_DB:
-        case PacketTypes.COM_PING: {
+        case Packets.COM_INIT_DB:
+        case Packets.COM_PING: {
             ByteBuffer buffer = source.allocateBuffer();
             buffer = source.writeToBuffer(OkPacket.OK, buffer);
             source.postWrite(buffer);
             break;
         }
-        case PacketTypes.COM_QUERY: {
+        case Packets.COM_QUERY: {
             Message mm = new Message(data);
             mm.position(5);
             String query = null;
@@ -65,8 +64,8 @@ public final class CommandHandler implements ManagerHandler {
             QueryHandler.handle(query, source);
             break;
         }
-        case PacketTypes.COM_QUIT:
-        case PacketTypes.COM_PROCESS_KILL:
+        case Packets.COM_QUIT:
+        case Packets.COM_PROCESS_KILL:
             source.close();
             break;
         default:
