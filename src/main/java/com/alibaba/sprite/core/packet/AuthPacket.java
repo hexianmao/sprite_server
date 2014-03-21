@@ -17,7 +17,6 @@ package com.alibaba.sprite.core.packet;
 
 import com.alibaba.sprite.core.Capabilities;
 import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.util.BufferUtil;
 
 /**
@@ -39,7 +38,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-15 下午04:35:34
  */
-public class AuthPacket extends Packet {
+public class AuthPacket extends AbstractPacket {
 
     private static final byte[] FILLER = new byte[23];
 

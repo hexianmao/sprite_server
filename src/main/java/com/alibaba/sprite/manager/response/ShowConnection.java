@@ -122,7 +122,7 @@ public final class ShowConnection {
     private static RsRowDataPacket getRow(ServerConnection c, String charset) {
         RsRowDataPacket row = new RsRowDataPacket(FIELD_COUNT);
         row.add(c.getProcessor().getName().getBytes());
-        row.add(LongUtil.toBytes(c.getId()));
+        row.add(IntegerUtil.toBytes(c.getId().hashCode()));
         row.add(StringUtil.encode(c.getHost(), charset));
         row.add(IntegerUtil.toBytes(c.getPort()));
         row.add(IntegerUtil.toBytes(c.getLocalPort()));

@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
+import com.alibaba.sprite.core.packet.AbstractPacket;
 import com.alibaba.sprite.core.util.BufferUtil;
 
 /**
@@ -46,7 +46,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-23 上午01:05:55
  */
-public class RsRowDataPacket extends Packet {
+public class RsRowDataPacket extends AbstractPacket {
 
     private static final byte NULL_MARK = (byte) 251;
 

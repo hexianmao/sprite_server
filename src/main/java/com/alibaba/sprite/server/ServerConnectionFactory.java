@@ -23,7 +23,7 @@ import com.alibaba.sprite.SpriteServer;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.net.ConnectionFactory;
-import com.alibaba.sprite.server.handler.AuthHandler;
+import com.alibaba.sprite.core.util.UUIDUtil;
 
 /**
  * @author xianmao.hexm
@@ -45,7 +45,7 @@ public final class ServerConnectionFactory implements ConnectionFactory {
         socket.setTcpNoDelay(true);
         socket.setKeepAlive(true);
         ServerConnection c = new ServerConnection(channel);
-        c.setId(ID_GENERATOR.newId());
+        c.setId(UUIDUtil.newKey());
         c.setHost(socket.getInetAddress().getHostAddress());
         c.setPort(socket.getPort());
         c.setLocalPort(socket.getLocalPort());

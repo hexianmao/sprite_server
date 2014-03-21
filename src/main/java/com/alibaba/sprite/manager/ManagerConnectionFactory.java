@@ -22,7 +22,7 @@ import java.nio.channels.SocketChannel;
 import com.alibaba.sprite.core.BufferQueue;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.net.ConnectionFactory;
-import com.alibaba.sprite.manager.handler.AuthHandler;
+import com.alibaba.sprite.core.util.UUIDUtil;
 
 /**
  * @author xianmao.hexm
@@ -44,7 +44,7 @@ public final class ManagerConnectionFactory implements ConnectionFactory {
         socket.setTcpNoDelay(true);
         socket.setKeepAlive(true);
         ManagerConnection c = new ManagerConnection(channel);
-        c.setId(ID_GENERATOR.newId());
+        c.setId(UUIDUtil.newKey());
         c.setHost(socket.getInetAddress().getHostAddress());
         c.setPort(socket.getPort());
         c.setLocalPort(socket.getLocalPort());

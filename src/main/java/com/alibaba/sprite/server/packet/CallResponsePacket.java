@@ -15,32 +15,9 @@
  */
 package com.alibaba.sprite.server.packet;
 
-import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.Packet;
-
 /**
  * @author xianmao.hexm
  */
-public class CallPacket extends Packet {
-
-    public String value;
-
-    public void read(byte[] data) {
-        Message mm = new Message(data);
-        packetLength = mm.readUB3();
-        packetId = mm.read();
-        mm.read();//move command flag
-        value = mm.readStringWithNull();
-    }
-
-    @Override
-    public int calcPacketSize() {
-        return 1 + ((value == null) ? 1 : value.length() + 1);
-    }
-
-    @Override
-    protected String getPacketInfo() {
-        return "Call Packet";
-    }
+public class CallResponsePacket {
 
 }

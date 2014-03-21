@@ -18,8 +18,8 @@ package com.alibaba.sprite.manager.packet;
 import java.nio.ByteBuffer;
 
 import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
+import com.alibaba.sprite.core.packet.AbstractPacket;
 import com.alibaba.sprite.core.util.BufferUtil;
 
 /**
@@ -50,7 +50,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-22 下午05:43:34
  */
-public class RsFieldPacket extends Packet {
+public class RsFieldPacket extends AbstractPacket {
 
     private static final byte[] DEFAULT_CATALOG = "def".getBytes();
     private static final byte[] FILLER = new byte[2];

@@ -17,7 +17,6 @@ package com.alibaba.sprite.core.packet;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.util.BufferUtil;
 
@@ -43,7 +42,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-14 下午05:18:15
  */
-public class HandshakePacket extends Packet {
+public class HandshakePacket extends AbstractPacket {
 
     private static final byte[] FILLER_13 = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 

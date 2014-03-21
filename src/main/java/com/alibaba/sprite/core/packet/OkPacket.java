@@ -17,7 +17,6 @@ package com.alibaba.sprite.core.packet;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.util.BufferUtil;
 
@@ -39,7 +38,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-16 上午10:33:50
  */
-public class OkPacket extends Packet {
+public class OkPacket extends AbstractPacket {
 
     public static final byte FIELD_COUNT = 0x00;
     public static final byte[] OK = new byte[] { 7, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0 };

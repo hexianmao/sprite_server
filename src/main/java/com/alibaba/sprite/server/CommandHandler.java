@@ -13,63 +13,64 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.manager.handler;
+package com.alibaba.sprite.server;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.apache.log4j.Logger;
 
 import com.alibaba.sprite.core.ErrorCode;
-import com.alibaba.sprite.core.Message;
 import com.alibaba.sprite.core.PacketTypes;
 import com.alibaba.sprite.core.packet.OkPacket;
-import com.alibaba.sprite.manager.ManagerConnection;
-import com.alibaba.sprite.manager.ManagerHandler;
+import com.alibaba.sprite.server.handler.CallHandler;
+import com.alibaba.sprite.server.handler.EchoHandler;
+import com.alibaba.sprite.server.packet.CallRequestPacket;
 
 /**
  * @author xianmao.hexm
  */
-public final class CommandHandler implements ManagerHandler {
+public final class CommandHandler implements ServerHandler {
 
-    protected final ManagerConnection source;
+    private static final Logger LOGGER = Logger.getLogger(CommandHandler.class);
 
-    public CommandHandler(ManagerConnection source) {
+    protected final ServerConnection source;
+
+    public CommandHandler(ServerConnection source) {
         this.source = source;
     }
 
     @Override
     public void handle(byte[] data) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(new StringBuilder().append(source).append(Arrays.toString(data)).toString());
+        }
         switch (data[4]) {
         case PacketTypes.COM_INIT_DB:
-        case PacketTypes.COM_PING: {
+        case PacketTypes.COM_QUERY: {
             ByteBuffer buffer = source.allocateBuffer();
             buffer = source.writeToBuffer(OkPacket.OK, buffer);
             source.postWrite(buffer);
             break;
         }
-        case PacketTypes.COM_QUERY: {
-            Message mm = new Message(data);
-            mm.position(5);
-            String query = null;
-            try {
-                query = mm.readString(source.getCharset());
-            } catch (UnsupportedEncodingException e) {
-                source.writeErrMessage(
-                        (byte) 1,
-                        ErrorCode.ER_UNKNOWN_CHARACTER_SET,
-                        "Unknown charset '" + source.getCharset() + "'");
-                return;
-            }
-            if (query == null || query.length() == 0) {
-                source.writeErrMessage((byte) 1, ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty SQL");
-                return;
-            }
-            QueryHandler.handle(query, source);
+        case PacketTypes.COM_PING: {
+            break;
+        }
+        case PacketTypes.COM_ECHO: {
+            EchoHandler.handle(data, source);
+            break;
+        }
+        case PacketTypes.COM_CALL: {
+            CallRequestPacket packet = new CallRequestPacket();
+            packet.read(data);
+            CallHandler.handle(packet, source);
             break;
         }
         case PacketTypes.COM_QUIT:
-        case PacketTypes.COM_PROCESS_KILL:
+        case PacketTypes.COM_PROCESS_KILL: {
             source.close();
             break;
+        }
         default:
             source.writeErrMessage((byte) 1, ErrorCode.ER_UNKNOWN_COM_ERROR, "unknown command");
         }

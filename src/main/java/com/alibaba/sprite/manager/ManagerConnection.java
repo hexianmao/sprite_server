@@ -57,7 +57,7 @@ public final class ManagerConnection implements Connection {
     private final ReentrantLock keyLock;
     private final ReentrantLock writeLock;
     private final AtomicBoolean isClosed;
-    private long id;
+    private String id;
     private String host;
     private int port;
     private int localPort;
@@ -101,11 +101,11 @@ public final class ManagerConnection implements Connection {
         return authSeed;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -223,7 +223,7 @@ public final class ManagerConnection implements Connection {
             hs.packetId = 0;
             hs.protocolVersion = Versions.PROTOCOL_VERSION;
             hs.serverVersion = Versions.SERVER_VERSION;
-            hs.threadId = id;
+            hs.threadId = id.hashCode();
             hs.seed = rand1;
             hs.serverCapabilities = getServerCapabilities();
             hs.serverCharsetIndex = (byte) (charsetIndex & 0xff);

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alibaba.sprite.server.handler;
+package com.alibaba.sprite.server;
 
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
@@ -25,8 +25,6 @@ import com.alibaba.sprite.core.PacketTypes;
 import com.alibaba.sprite.core.packet.AuthPacket;
 import com.alibaba.sprite.core.packet.QuitPacket;
 import com.alibaba.sprite.core.util.SecurityUtil;
-import com.alibaba.sprite.server.ServerConnection;
-import com.alibaba.sprite.server.ServerHandler;
 
 /**
  * @author xianmao.hexm

@@ -15,13 +15,12 @@
  */
 package com.alibaba.sprite.core.packet;
 
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.PacketTypes;
 
 /**
  * @author xianmao.hexm
  */
-public class PingPacket extends Packet {
+public class PingPacket extends AbstractPacket {
 
     public static final byte[] PING = new byte[] { 1, 0, 0, 0, PacketTypes.COM_PING };
 

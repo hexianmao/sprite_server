@@ -18,8 +18,8 @@ package com.alibaba.sprite.manager.packet;
 import java.nio.ByteBuffer;
 
 import com.alibaba.sprite.core.Message;
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
+import com.alibaba.sprite.core.packet.AbstractPacket;
 import com.alibaba.sprite.core.util.BufferUtil;
 
 /**
@@ -39,7 +39,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-16 上午10:55:53
  */
-public class RsEOFPacket extends Packet {
+public class RsEOFPacket extends AbstractPacket {
 
     public static final byte FIELD_COUNT = (byte) 0xfe;
 

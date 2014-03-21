@@ -17,7 +17,6 @@ package com.alibaba.sprite.core.packet;
 
 import java.nio.ByteBuffer;
 
-import com.alibaba.sprite.core.Packet;
 import com.alibaba.sprite.core.net.Connection;
 import com.alibaba.sprite.core.util.BufferUtil;
 
@@ -38,7 +37,7 @@ import com.alibaba.sprite.core.util.BufferUtil;
  * 
  * @author xianmao.hexm 2010-7-16 上午10:45:01
  */
-public class ErrorPacket extends Packet {
+public class ErrorPacket extends AbstractPacket {
 
     public static final byte FIELD_COUNT = (byte) 0xff;
     private static final byte SQLSTATE_MARKER = (byte) '#';
